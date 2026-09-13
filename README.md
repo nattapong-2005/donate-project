@@ -39,11 +39,11 @@ npm install
 เปิดไฟล์ `.env` และกำหนดค่าตัวแปรสภาพแวดล้อม:
 ```env
 PORT=3000
-SLIPOK_BRANCH_ID=76110
-SLIPOK_API_KEY=SLIPOK67HJ1G8
-PROMPTPAY_ID=0649520055
+SLIPOK_BRANCH_ID=YOUR_BRANCH_ID
+SLIPOK_API_KEY=YOUR_SLIPOK_API_KEY
+PROMPTPAY_ID=YOUR_PROMPTPAY_NUMBER
 ```
-*(หมายเหตุ: สามารถปรับเปลี่ยนหมายเลข PromptPay ได้จากหน้า Admin Dashboard เช่นกัน)*
+*(คัดลอกไฟล์ `.env.example` เป็น `.env` แล้วกรอกค่าจริง)*
 
 ### 3. เริ่มต้นการทำงานของเซิร์ฟเวอร์
 ```bash
