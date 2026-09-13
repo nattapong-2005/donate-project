@@ -1,0 +1,145 @@
+@font-face {
+  font-family: 'LINESeedSansTH';
+  src: url('/font/LINESeedSansTH-Regular.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: transparent;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'LINESeedSansTH', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 50px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Alert Container */
+.alert-wrapper {
+  position: relative;
+  width: 580px;
+  max-width: 90vw;
+  opacity: 0;
+  transform: translateY(-30px) scale(0.95);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.alert-wrapper.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.alert-wrapper.hide {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.96);
+  transition: transform 0.35s ease-in, opacity 0.3s ease-in;
+}
+
+/* Minimal Premium Card */
+.alert-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 26px 30px;
+  box-shadow: 
+    0 25px 50px -12px rgba(15, 23, 42, 0.16),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Minimal Accent Accent Bar */
+.alert-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #0f172a 0%, #2563eb 50%, #059669 100%);
+}
+
+/* Icon / Gift Badge */
+.alert-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  margin-bottom: 12px;
+  animation: bounceGift 1.2s infinite ease-in-out alternate;
+}
+
+.alert-icon {
+  font-size: 28px;
+}
+
+@keyframes bounceGift {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-5px) scale(1.04); }
+}
+
+/* Header Text */
+.alert-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.3;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+
+.donator-name {
+  color: #0f172a;
+  font-weight: 800;
+  display: inline-block;
+}
+
+/* Amount Badge */
+.alert-amount-badge {
+  display: inline-block;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1.5px solid #a7f3d0;
+  font-size: 22px;
+  font-weight: 800;
+  padding: 4px 18px;
+  border-radius: 30px;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.12);
+  margin: 6px 0 12px;
+  letter-spacing: -0.3px;
+}
+
+/* Donator Message */
+.alert-message {
+  font-size: 18px;
+  font-weight: 500;
+  color: #334155;
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-top: 6px;
+  border: 1px solid #e2e8f0;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.alert-message:empty {
+  display: none;
+}
