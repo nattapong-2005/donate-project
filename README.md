@@ -1,91 +1,19 @@
-# ระบบ Donate ขึ้นจอ OBS Studio ด้วย SlipOK + PromptPay
+﻿# Donate Project
 
-ระบบสนับสนุนสตรีมเมอร์ผ่าน PromptPay QR แบบ Dynamic Amount และตรวจสอบความถูกต้องของสลิปแบบอัตโนมัติด้วย **SlipOK API** ส่งสัญญาณแจ้งเตือน (Alert) ขึ้นหน้าจอ **OBS Studio** แบบ Real-time ผ่าน Browser Source ด้วย Socket.IO มีระบบคิวจัดการแจ้งเตือน เสียงแจ้งเตือน และระบบอ่านข้อความเสียงภาษาไทย (TTS)
+ระบบรับโดเนท PromptPay และแสดงแจ้งเตือนบน OBS สร้างด้วย Next.js, TypeScript และ Supabase
 
----
+## เริ่มใช้งาน
 
-## คุณสมบัติหลัก
+1. ติดตั้งแพ็กเกจด้วย `npm install`
+2. คัดลอก `.env.example` เป็น `.env.local` แล้วกรอกค่า Supabase, SlipOK และ `ADMIN_SECRET` ของคุณ
+3. รัน `npm run dev` แล้วเปิด `http://localhost:3000`
 
-- **PromptPay Dynamic QR:** สร้าง QR Code พร้อมเพย์ตามยอดเงินที่ระบุโดยอัตโนมัติตามมาตรฐาน EMVCo เพื่อป้องกันความผิดพลาดของยอดเงิน
-- **SlipOK Verification:** เชื่อมต่อ SlipOK API ในการตรวจสอบสลิปธนาคารชั้นนำของไทย
-- **Triple Validation & Fraud Protection:**
-  - ตรวจสอบยอดเงินในสลิปกับยอดที่แจ้งว่าตรงกันทุกประการ
-  - ตรวจสอบรหัสอ้างอิงธุรกรรม (`transRef`) ป้องกันการใช้สลิปซ้ำ 100%
-  - ตรวจสอบชื่อหรือเลขบัญชีผู้รับเงินปลายทาง (Optional)
-- **OBS Real-time Overlay (`/overlay`):**
-  - ดีไซน์สไตล์ Premium Minimal โทนสว่าง คมชัด พร้อมฟอนต์ LINE Seed Sans TH
-  - พื้นหลังโปร่งใส 100% เหมาะสำหรับซ้อนทับภาพหน้าจอเกมหรือกล้องใน OBS Studio
-  - **Donation Queue:** ระบบคิวจัดการแจ้งเตือน ป้องกันข้อความแสดงทับซ้อนกันเมื่อมีผู้บริจาคพร้อมกัน
-  - **Alert Audio Chime:** สังเคราะห์เสียงกระดิ่งแจ้งเตือนด้วย Web Audio API โดยตรง
-  - **Thai TTS:** ระบบอ่านชื่อผู้สนับสนุน ยอดเงิน และข้อความด้วยเสียงภาษาไทย
-- **Admin Dashboard (`/admin`):**
-  - สรุปยอดบริจาคประจำวันและยอดสะสมทั้งหมดแบบ Real-time
-  - ตรวจสอบสถานะโควต้าคงเหลือของ SlipOK API
-  - ปุ่ม **Test Alert** สำหรับทดสอบส่งสัญญาณขึ้นจอ OBS เพื่อจัดตำแหน่ง
-  - ปุ่ม **Replay Alert** สำหรับเล่นการแจ้งเตือนย้อนหลัง
-  - เมนูตั้งค่าระบบ: หมายเลข PromptPay, ยอดเงินขั้นต่ำ, ระดับเสียง, เปิด/ปิด TTS
-  - ระบบคัดกรองคำไม่สุภาพ (Word Blacklist) โดยเซ็นเซอร์เป็น `***` อัตโนมัติ
+หน้าใช้งานหลัก: `/donate` สำหรับผู้สนับสนุน, `/overlay` สำหรับ OBS Browser Source, `/admin` สำหรับจัดการระบบ และ `/customizer` สำหรับปรับแต่งแจ้งเตือนพร้อม Live Preview
 
----
+การตั้งค่าและข้อมูลโดเนทเก็บใน Supabase; สร้างตารางผู้ใช้ด้วย `supabase/migrations/create_users_table.sql` เมื่อใช้ระบบบัญชีผู้ดูแล
 
-## การติดตั้งและการเริ่มใช้งาน
+## ตรวจสอบก่อนใช้งานจริง
 
-### 1. ติดตั้ง Dependencies
-```bash
-npm install
-```
+รัน `npm run type-check` และ `npm run build` เพื่อตรวจ TypeScript และ production build
 
-### 2. ตรวจสอบการตั้งค่าในไฟล์ `.env`
-เปิดไฟล์ `.env` และกำหนดค่าตัวแปรสภาพแวดล้อม:
-```env
-PORT=3000
-SLIPOK_BRANCH_ID=YOUR_BRANCH_ID
-SLIPOK_API_KEY=YOUR_SLIPOK_API_KEY
-PROMPTPAY_ID=YOUR_PROMPTPAY_NUMBER
-```
-*(คัดลอกไฟล์ `.env.example` เป็น `.env` แล้วกรอกค่าจริง)*
-
-### 3. เริ่มต้นการทำงานของเซิร์ฟเวอร์
-```bash
-npm start
-```
-หรือสำหรับโหมดพัฒนา (Watch Mode):
-```bash
-npm run dev
-```
-
-เซิร์ฟเวอร์จะเปิดให้บริการที่พอร์ต 3000 (`http://localhost:3000`)
-
----
-
-## การเชื่อมต่อกับ OBS Studio
-
-1. เปิดโปรแกรม **OBS Studio**
-2. ในแผงควบคุม **Sources** ให้คลิกปุ่ม **`+`** แล้วเลือก **`Browser`**
-3. ตั้งชื่อ Source เช่น `Donate Alert` แล้วกด **OK**
-4. กำหนดค่าการเชื่อมต่อ:
-   - **URL:** `http://localhost:3000/overlay`
-   - **Width:** `1920`
-   - **Height:** `1080` (หรือตามขนาด Scene)
-   - ทำเครื่องหมายที่ `Shutdown source when not visible`
-   - ทำเครื่องหมายที่ `Refresh browser when scene becomes active`
-5. กด **OK**
-6. เปิดหน้า Admin ที่ `http://localhost:3000/admin` แล้วกดปุ่ม **"ส่ง Test Alert ขึ้นหน้าจอ OBS"** เพื่อตรวจสอบตำแหน่งการแสดงผล
-
----
-
-## ส่วนติดต่อผู้ใช้งาน (Web Interfaces)
-
-| URL | หน้าที่การทำงาน |
-| :--- | :--- |
-| `http://localhost:3000/donate` | หน้าบริจาคสำหรับผู้ชม (สร้าง QR พร้อมเพย์ และอัปโหลดสลิป) |
-| `http://localhost:3000/overlay` | หน้า Browser Source สำหรับใส่ในโปรแกรม OBS Studio |
-| `http://localhost:3000/admin` | หน้าจัดการสำหรับผู้ดูแล (สถิติ, ทดสอบระบบ, ตั้งค่าระบบ) |
-
----
-
-## มาตรการความปลอดภัย
-
-- **การรักษาความลับ API Key:** จัดเก็บและเรียกใช้งาน `SLIPOK_API_KEY` เฉพาะบน Backend Server เท่านั้น โดยไม่มีการส่งออกไปยัง Client Browser
-- **การป้องกันการโจมตี:** มีระบบ Sanitize ข้อมูลชื่อและข้อความเพื่อป้องกัน XSS (Cross-Site Scripting) และ HTML/Script Injection
-- **การตรวจสอบไฟล์อัปโหลด:** ตรวจสอบประเภทไฟล์ผ่าน MIME Type อนุญาตเฉพาะภาพนามสกุล `.jpg`, `.jpeg`, `.png`, `.webp` และจำกัดขนาดไม่เกิน 5MB ต่อไฟล์
+เก็บ `.env.local` และ `supabase.txt` ไว้เฉพาะในเครื่อง ห้ามนำ service role key ขึ้น Git
