@@ -66,7 +66,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Prevent negative sign, plus sign, and scientific notation (e/E)
+  amountInput.addEventListener('keydown', (e) => {
+    if (['-', '+', 'e', 'E'].includes(e.key)) {
+      e.preventDefault();
+    }
+  });
+
+  // Sanitize on paste
+  amountInput.addEventListener('paste', (e) => {
+    const pasteData = (e.clipboardData || window.clipboardData).getData('text');
+    if (!/^\d+(\.\d{1,2})?$/.test(pasteData.trim())) {
+      e.preventDefault();
+      showStatus('กรุณากรอกเฉพาะตัวเลขที่ถูกต้อง (ห้ามใส่เครื่องหมายติดลบหรือตัวอักษร)', 'error');
+    }
+  });
+
   amountInput.addEventListener('input', () => {
+    // Strip any negative sign or invalid character
+    if (/[^0-9.]/.test(amountInput.value)) {
+      amountInput.value = amountInput.value.replace(/[^0-9.]/g, '');
+    }
+
     amountButtons.forEach(b => {
       if (b.dataset.amount === amountInput.value) {
         b.classList.add('active');
@@ -93,11 +114,19 @@ document.addEventListener('DOMContentLoaded', () => {
   btnCreateQR.addEventListener('click', async () => {
     hideStatus();
     const name = nameInput.value.trim() || 'ผู้สนับสนุนใจดี';
-    const amount = parseFloat(amountInput.value);
+    const rawAmount = amountInput.value.trim();
     const message = messageInput.value.trim();
 
-    if (isNaN(amount) || amount <= 0) {
-      showStatus('กรุณากรอกจำนวนเงินให้ถูกต้อง', 'error');
+    // Strict positive numeric validation
+    if (!rawAmount || !/^\d+(\.\d{1,2})?$/.test(rawAmount)) {
+      showStatus('กรุณากรอกจำนวนเงินเป็นตัวเลขที่ถูกต้อง (ห้ามใส่เครื่องหมายติดลบหรือตัวอักษร)', 'error');
+      return;
+    }
+
+    const amount = parseFloat(rawAmount);
+    const minVal = parseFloat(amountInput.min) || 5;
+    if (isNaN(amount) || amount < minVal) {
+      showStatus(`ยอดเงินสนับสนุนขั้นต่ำคือ ${minVal} บาท`, 'error');
       return;
     }
 

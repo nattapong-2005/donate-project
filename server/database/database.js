@@ -44,7 +44,7 @@ const defaultSettings = {
   promptpay_id: config.PROMPTPAY_ID,
   receiver_name: config.RECEIVER_NAME,
   receiver_account: config.RECEIVER_ACCOUNT,
-  min_donate: '1',
+  min_donate: '5',
   alert_duration: '8',
   alert_volume: '80',
   tts_enabled: 'true',

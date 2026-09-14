@@ -47,6 +47,10 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(publicDir, 'admin.html'));
 });
 
+app.get('/customizer', (req, res) => {
+  res.sendFile(path.join(publicDir, 'customizer.html'));
+});
+
 // Socket.IO connection handling
 io.on('connection', (socket) => {
   console.log(`[Socket.IO] Client connected: ${socket.id}`);
@@ -61,8 +65,9 @@ const PORT = config.PORT;
 server.listen(PORT, () => {
   console.log('====================================================');
   console.log(`🚀 Donation System running on http://localhost:${PORT}`);
-  console.log(`🎁 Donate Page:  http://localhost:${PORT}/donate`);
-  console.log(`📺 OBS Overlay:  http://localhost:${PORT}/overlay`);
-  console.log(`⚙️  Admin Panel:  http://localhost:${PORT}/admin`);
+  console.log(`🎁 Donate Page:     http://localhost:${PORT}/donate`);
+  console.log(`📺 OBS Overlay:     http://localhost:${PORT}/overlay`);
+  console.log(`🎨 UI Customizer:   http://localhost:${PORT}/customizer`);
+  console.log(`⚙️  Admin Panel:     http://localhost:${PORT}/admin`);
   console.log('====================================================');
 });

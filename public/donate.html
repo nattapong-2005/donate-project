@@ -12,13 +12,13 @@
   <div class="container">
     <!-- Streamer Profile Header -->
     <div class="header-card">
-      <div class="avatar-wrapper">
+      <!-- <div class="avatar-wrapper">
         <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=200&auto=format&fit=crop&q=80" alt="Streamer Avatar" class="avatar-img">
         <div class="live-badge">
           <span class="live-dot"></span> LIVE
         </div>
-      </div>
-      <h1 class="streamer-name">Streamer Channel</h1>
+      </div> -->
+      <h1 class="streamer-name">localhostvlr</h1>
       <p class="streamer-desc">ส่งกำลังใจและข้อความขึ้นจอสดระหว่างสตรีมได้ที่นี่</p>
     </div>
 
@@ -38,21 +38,22 @@
       <div class="form-group">
         <label class="form-label">
           <span>จำนวนเงินสนับสนุน (บาท)</span>
+          <span class="label-hint">ขั้นต่ำ 5 บาท</span>
         </label>
         <div class="amount-grid">
+          <button type="button" class="amount-btn" data-amount="5">5 <span class="currency-badge">฿</span></button>
           <button type="button" class="amount-btn" data-amount="20">20 <span class="currency-badge">฿</span></button>
           <button type="button" class="amount-btn active" data-amount="50">50 <span class="currency-badge">฿</span></button>
           <button type="button" class="amount-btn" data-amount="100">100 <span class="currency-badge">฿</span></button>
           <button type="button" class="amount-btn" data-amount="300">300 <span class="currency-badge">฿</span></button>
           <button type="button" class="amount-btn" data-amount="500">500 <span class="currency-badge">฿</span></button>
-          <button type="button" class="amount-btn" data-amount="1000">1,000 <span class="currency-badge">฿</span></button>
         </div>
-        <input type="number" id="amountInput" class="input-control" value="50" min="1" step="any" placeholder="หรือระบุจำนวนเงินเอง">
+        <input type="number" id="amountInput" class="input-control" value="50" min="5" step="any" placeholder="หรือระบุจำนวนเงินเอง (ขั้นต่ำ 5 บาท)" onkeydown="if(['-', '+', 'e', 'E'].includes(event.key)) event.preventDefault();">
       </div>
 
       <div class="form-group">
         <label class="form-label" for="messageInput">
-          <span>ข้อความขึ้นจอ (OBS Alert)</span>
+          <span>ข้อความขึ้นจอ</span>
           <span id="msgCount" class="label-hint">0/200</span>
         </label>
         <textarea id="messageInput" class="input-control" placeholder="พิมพ์ข้อความที่ต้องการให้แสดงบนหน้าจอสตรีม..." maxlength="200"></textarea>

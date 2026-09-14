@@ -27,7 +27,7 @@ module.exports = function(io) {
   // Get public settings (minimum donation, etc.)
   router.get('/config', (req, res) => {
     try {
-      const minDonate = parseFloat(getSetting('min_donate', '1'));
+      const minDonate = parseFloat(getSetting('min_donate', '5'));
       res.json({
         success: true,
         minDonate
@@ -41,13 +41,14 @@ module.exports = function(io) {
   router.post('/create-qr', async (req, res) => {
     try {
       const { amount, name, message } = req.body;
-      const parsedAmount = parseFloat(amount);
-      const minDonate = parseFloat(getSetting('min_donate', '1'));
+      const amountStr = String(amount || '').trim();
+      const parsedAmount = parseFloat(amountStr);
+      const minDonate = parseFloat(getSetting('min_donate', '5'));
 
-      if (isNaN(parsedAmount) || parsedAmount < minDonate) {
+      if (!/^\d+(\.\d{1,2})?$/.test(amountStr) || isNaN(parsedAmount) || !isFinite(parsedAmount) || parsedAmount < minDonate) {
         return res.status(400).json({
           success: false,
-          message: `ยอดโดเนทขั้นต่ำคือ ${minDonate} บาท`
+          message: `ยอดโดเนทต้องเป็นตัวเลขจำนวนบวก และขั้นต่ำคือ ${minDonate} บาท`
         });
       }
 

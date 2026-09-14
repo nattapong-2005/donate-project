@@ -4,19 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OBS Stream Alert Overlay</title>
+  <!-- Google Fonts for Thai & English -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700;800&family=Inter:wght@400;600;700;800&family=Kanit:wght@400;600;700;800&family=Mitr:wght@400;600;700&family=Outfit:wght@400;600;700;800&family=Prompt:wght@400;600;700;800&family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/overlay.css">
 </head>
-<body>
+<body class="overlay-body">
   <!-- Sound effect element -->
   <audio id="alertAudio" src="/sounds/alert.mp3" preload="auto"></audio>
 
   <!-- Alert Container -->
   <div id="alertWrapper" class="alert-wrapper">
-    <div class="alert-card">
-      <div class="alert-shimmer"></div>
+    <div id="alertCard" class="alert-card">
+      <div id="alertShimmer" class="alert-shimmer"></div>
       
-      <div class="alert-icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <div id="alertIconWrap" class="alert-icon-wrap">
+        <svg id="alertIconSvg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 12 20 22 4 22 4 12"></polyline>
           <rect x="2" y="7" width="20" height="5"></rect>
           <line x1="12" y1="22" x2="12" y2="7"></line>
@@ -25,16 +29,16 @@
         </svg>
       </div>
 
-      <div class="alert-title">
-        <span id="donatorName" class="donator-name">ผู้สนับสนุน</span>
-        <span style="font-weight: 500; font-size: 22px; color: #64748b;"> สนับสนุนแล้ว!</span>
+      <div class="alert-title alert-headline">
+        <span id="donatorName" class="donator-name">test</span>
+        <span id="alertActionText" class="alert-action-text">โดเนทให้</span>
+        <span id="alertAmountWrap" class="alert-amount-wrap">
+          <span id="alertAmount" class="alert-amount-val">50</span>
+          <span id="alertCurrency" class="alert-currency">บาท</span>
+        </span>
       </div>
 
-      <div>
-        <div id="alertAmount" class="alert-amount-badge">+฿50.00</div>
-      </div>
-
-      <div id="alertMessage" class="alert-message"></div>
+      <div id="alertMessage" class="alert-message">สวัสดีครับ</div>
     </div>
   </div>
 
