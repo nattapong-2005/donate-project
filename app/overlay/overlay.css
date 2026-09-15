@@ -282,6 +282,8 @@ body.overlay-body {
   margin-left: var(--alert-text-margin-left, 0px);
   margin-right: var(--alert-text-margin-right, 0px);
   letter-spacing: var(--alert-letter-spacing, 0px);
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
   text-shadow: var(--alert-text-shadow, none);
   display: flex;
   align-items: center;
@@ -295,6 +297,8 @@ body.overlay-body {
   font-weight: 800;
   display: inline;
   letter-spacing: var(--alert-letter-spacing, 0px);
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
   text-shadow: var(--alert-text-shadow, none);
 }
 
@@ -303,6 +307,8 @@ body.overlay-body {
   font-weight: 600;
   display: inline;
   letter-spacing: var(--alert-letter-spacing, 0px);
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
   text-shadow: var(--alert-text-shadow, none);
 }
 
@@ -322,6 +328,8 @@ body.overlay-body {
   border-radius: 0;
   box-shadow: none;
   letter-spacing: var(--alert-letter-spacing, 0px);
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
   transition: all 0.3s ease;
   text-shadow: none;
   vertical-align: middle;
@@ -329,11 +337,15 @@ body.overlay-body {
 
 .alert-amount-val {
   font-weight: 800;
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
 }
 
 .alert-currency {
   font-size: 0.9em;
   font-weight: 700;
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
 }
 
 /* Donator Message */
@@ -349,6 +361,8 @@ body.overlay-body {
   word-break: break-word;
   line-height: 1.5;
   letter-spacing: var(--alert-letter-spacing, 0px);
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
   transition: all 0.3s ease;
   text-shadow: var(--alert-text-shadow, none);
 }

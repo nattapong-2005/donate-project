@@ -121,6 +121,15 @@ export default function OverlayPage() {
     if (s.alert_text_margin_right !== undefined) root.style.setProperty('--alert-text-margin-right', `${s.alert_text_margin_right}px`);
     if (s.alert_line_height !== undefined) root.style.setProperty('--alert-line-height', `${s.alert_line_height}`);
 
+    const strokeEnabled = s.alert_text_stroke_enabled === 'true' || s.alert_text_stroke_enabled === true;
+    if (strokeEnabled) {
+      const strokeWidth = s.alert_text_stroke_width || 1.5;
+      const strokeColor = s.alert_text_stroke_color || '#000000';
+      root.style.setProperty('--alert-text-stroke', `${strokeWidth}px ${strokeColor}`);
+    } else {
+      root.style.setProperty('--alert-text-stroke', 'none');
+    }
+
     if (s.alert_amount_bg) root.style.setProperty('--alert-amount-bg', s.alert_amount_bg);
     if (s.alert_amount_color) root.style.setProperty('--alert-amount-color', s.alert_amount_color);
     if (s.alert_amount_border) root.style.setProperty('--alert-amount-border', s.alert_amount_border);

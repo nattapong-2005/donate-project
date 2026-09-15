@@ -419,6 +419,8 @@ body {
   margin-left: var(--alert-text-margin-left, 0px);
   margin-right: var(--alert-text-margin-right, 0px);
   letter-spacing: var(--alert-letter-spacing, 0px);
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
   text-shadow: var(--alert-text-shadow);
 }
 
@@ -426,6 +428,8 @@ body {
   font-weight: 700;
   color: var(--alert-name-color);
   letter-spacing: var(--alert-letter-spacing, -0.02em);
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
 }
 
 .alert-action-text {
@@ -433,6 +437,8 @@ body {
   color: var(--alert-action-color);
   font-size: 0.82em;
   letter-spacing: var(--alert-letter-spacing, normal);
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
 }
 
 .alert-amount-wrap {
@@ -449,17 +455,23 @@ body {
   font-size: var(--alert-amount-size);
   font-weight: 700;
   letter-spacing: -0.01em;
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
 }
 
 .alert-amount-val {
   color: inherit;
   font-feature-settings: "tnum";
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
 }
 
 .alert-currency {
   font-size: 0.68em;
   font-weight: 600;
   opacity: 0.9;
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
 }
 
 .alert-message {
@@ -474,6 +486,8 @@ body {
   font-weight: 400;
   word-break: break-word;
   white-space: pre-wrap;
+  -webkit-text-stroke: var(--alert-text-stroke, none);
+  paint-order: stroke fill;
   text-shadow: var(--alert-text-shadow);
 }
 

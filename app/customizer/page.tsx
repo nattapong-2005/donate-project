@@ -369,6 +369,9 @@ export default function CustomizerPage() {
     alert_text_margin_left: 0,
     alert_text_margin_right: 0,
     alert_line_height: 1.35,
+    alert_text_stroke_enabled: 'false',
+    alert_text_stroke_color: '#000000',
+    alert_text_stroke_width: 1.5,
     alert_animation: 'slide-down',
     alert_duration: 8
   });
@@ -548,6 +551,11 @@ export default function CustomizerPage() {
 
   const isCardFrameless = activeMode === 'frameless' || settings.alert_card_bg === 'transparent';
   const IconComponent = ICONS[settings.alert_icon || 'gift'] || ICONS.gift;
+  const isStrokeEnabled = settings.alert_text_stroke_enabled === 'true' || settings.alert_text_stroke_enabled === true;
+  const strokeStyle: React.CSSProperties = isStrokeEnabled ? {
+    WebkitTextStroke: `${settings.alert_text_stroke_width || 1.5}px ${settings.alert_text_stroke_color || '#000000'}`,
+    paintOrder: 'stroke fill'
+  } : {};
 
   return (
     <div className="admin-layout">
@@ -1297,6 +1305,133 @@ export default function CustomizerPage() {
                 />
               </div>
 
+              {/* Stroke Text (เส้นขอบตัวอักษร) */}
+              <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                  <label className="form-label" style={{ fontWeight: 700, fontSize: '13.5px', marginBottom: 0 }}>
+                    🖋️ เส้นขอบตัวอักษร (Stroke Text)
+                  </label>
+                  {settings.alert_text_stroke_enabled === 'true' && (
+                    <button
+                      type="button"
+                      className="btn-text-action"
+                      onClick={() => updateField('alert_text_stroke_enabled', 'false')}
+                    >
+                      🚫 ปิดเส้นขอบ
+                    </button>
+                  )}
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '12px' }}>
+                  <label className="form-label">เปิดใช้งานเส้นขอบตัวอักษร (เอาหรือไม่เอา)</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <button
+                      type="button"
+                      className={`nav-btn ${settings.alert_text_stroke_enabled !== 'true' ? 'active' : ''}`}
+                      style={{ padding: '8px 12px', justifyContent: 'center' }}
+                      onClick={() => updateField('alert_text_stroke_enabled', 'false')}
+                    >
+                      🚫 ไม่เอาเส้นขอบ
+                    </button>
+                    <button
+                      type="button"
+                      className={`nav-btn ${settings.alert_text_stroke_enabled === 'true' ? 'active' : ''}`}
+                      style={{ padding: '8px 12px', justifyContent: 'center' }}
+                      onClick={() => {
+                        updateField('alert_text_stroke_enabled', 'true');
+                        if (!settings.alert_text_stroke_color) updateField('alert_text_stroke_color', '#000000');
+                        if (!settings.alert_text_stroke_width) updateField('alert_text_stroke_width', 1.5);
+                      }}
+                    >
+                      ✨ ใส่เส้นขอบตัวอักษร
+                    </button>
+                  </div>
+                </div>
+
+                {settings.alert_text_stroke_enabled === 'true' && (
+                  <div style={{
+                    background: 'var(--bg-main, #f8fafc)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-md, 12px)',
+                    padding: '14px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px'
+                  }}>
+                    <div className="color-field">
+                      <div className="field-label-row">
+                        <label>กำหนดสีเส้นขอบ (Stroke Color)</label>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          <button
+                            type="button"
+                            className="btn-text-action"
+                            style={{ borderColor: '#000000', background: '#000000', color: '#ffffff' }}
+                            onClick={() => updateField('alert_text_stroke_color', '#000000')}
+                          >
+                            ดำ
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-text-action"
+                            style={{ borderColor: '#cbd5e1', background: '#ffffff', color: '#000000' }}
+                            onClick={() => updateField('alert_text_stroke_color', '#ffffff')}
+                          >
+                            ขาว
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-text-action"
+                            style={{ borderColor: '#2563eb', background: '#2563eb', color: '#ffffff' }}
+                            onClick={() => updateField('alert_text_stroke_color', '#1e3a8a')}
+                          >
+                            น้ำเงิน
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-text-action"
+                            style={{ borderColor: '#dc2626', background: '#dc2626', color: '#ffffff' }}
+                            onClick={() => updateField('alert_text_stroke_color', '#991b1b')}
+                          >
+                            แดง
+                          </button>
+                        </div>
+                      </div>
+                      <div className="color-input-wrap">
+                        <input
+                          type="color"
+                          value={settings.alert_text_stroke_color?.startsWith('#') ? settings.alert_text_stroke_color : '#000000'}
+                          onChange={(e) => updateField('alert_text_stroke_color', e.target.value)}
+                        />
+                        <input
+                          type="text"
+                          className="hex-input"
+                          value={settings.alert_text_stroke_color || '#000000'}
+                          onChange={(e) => updateField('alert_text_stroke_color', e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span>ความหนาเส้นขอบ (Stroke Width)</span>
+                        <span className="label-val">{settings.alert_text_stroke_width || 1.5}px</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0.5"
+                        max="4"
+                        step="0.5"
+                        value={settings.alert_text_stroke_width || 1.5}
+                        onChange={(e) => updateField('alert_text_stroke_width', parseFloat(e.target.value))}
+                      />
+                      <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px' }}>
+                        ช่วยให้อ่านตัวอักษรได้ชัดเจน คมชัด บนทุกฉากหลังเกมและสตรีม
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Spacing Controls (บน ล่าง ซ้าย ขวา & ช่องไฟ) */}
               <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
@@ -1798,7 +1933,7 @@ export default function CustomizerPage() {
                     style={{
                       fontSize: `${settings.alert_title_size || 26}px`,
                       marginTop: `${settings.alert_text_margin_top ?? 0}px`,
-                      marginBottom: `${settings.alert_text_margin_bottom ?? 10}px`,
+                      marginBottom: `${settings.alert_text_margin_bottom ?? 0}px`,
                       marginLeft: `${settings.alert_text_margin_left ?? 0}px`,
                       marginRight: `${settings.alert_text_margin_right ?? 0}px`,
                       letterSpacing: `${settings.alert_letter_spacing ?? 0}px`,
@@ -1814,7 +1949,8 @@ export default function CustomizerPage() {
                       className="donator-name"
                       style={{
                         color: settings.alert_name_color || '#0f172a',
-                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`
+                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`,
+                        ...strokeStyle
                       }}
                     >
                       {(testName || '').trim() || 'Anonymous'}
@@ -1823,7 +1959,8 @@ export default function CustomizerPage() {
                       className="alert-action-text"
                       style={{
                         color: settings.alert_action_color || '#64748b',
-                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`
+                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`,
+                        ...strokeStyle
                       }}
                     >
                       {settings.alert_action_text || 'โดเนทให้'}
@@ -1840,10 +1977,10 @@ export default function CustomizerPage() {
                         letterSpacing: `${settings.alert_letter_spacing ?? 0}px`
                       }}
                     >
-                      <span className="alert-amount-val">
+                      <span className="alert-amount-val" style={{ ...strokeStyle }}>
                         {testAmount !== '' && !isNaN(Number(testAmount)) ? Number(testAmount).toLocaleString('th-TH') : 0}
                       </span>
-                      <span className="alert-currency">บาท</span>
+                      <span className="alert-currency" style={{ ...strokeStyle }}>บาท</span>
                     </span>
                   </div>
 
@@ -1857,7 +1994,8 @@ export default function CustomizerPage() {
                         border: settings.alert_msg_bg === 'transparent' ? 'none' : `1px solid ${settings.alert_msg_border || '#e2e8f0'}`,
                         padding: settings.alert_msg_bg === 'transparent' ? '4px 0' : '12px 18px',
                         letterSpacing: `${settings.alert_letter_spacing ?? 0}px`,
-                        marginTop: '-10px'
+                        marginTop: '-10px',
+                        ...strokeStyle
                       }}
                     >
                       {testMessage}

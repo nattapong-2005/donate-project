@@ -72,6 +72,9 @@ export interface AlertSettings {
   alert_text_margin_left?: number | string;
   alert_text_margin_right?: number | string;
   alert_line_height?: number | string;
+  alert_text_stroke_enabled?: string | boolean;
+  alert_text_stroke_color?: string;
+  alert_text_stroke_width?: number | string;
   alert_amount_bg?: string;
   alert_amount_color?: string;
   alert_amount_border?: string;
