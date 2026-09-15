@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { authenticateUser } from '@/lib/services/userService';
+import { authenticateUser, SESSION_MAX_AGE_SECONDS } from '@/lib/services/userService';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,9 +29,9 @@ export async function POST(request: Request) {
       token
     });
 
-    // Set HTTP-only session cookie (valid for 7 days)
+    // Set HTTP-only session cookie (valid for 1 hour)
     const isProduction = process.env.NODE_ENV === 'production';
-    const maxAge = 7 * 24 * 60 * 60; // 7 days
+    const maxAge = SESSION_MAX_AGE_SECONDS; // 1 hour (3600 seconds)
 
     response.cookies.set('admin_session', token, {
       path: '/',

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export interface SidebarUser {
   id?: string;
@@ -19,8 +19,6 @@ export interface SidebarProps {
   donationCount?: number;
   blacklistCount?: number;
   currentUser?: SidebarUser | null;
-  adminToken?: string;
-  onOpenTokenModal?: () => void;
   onLogout?: () => void;
   brandTitle?: string;
   brandHref?: string;
@@ -29,27 +27,29 @@ export interface SidebarProps {
 export default function Sidebar({
   isOpen,
   onClose,
-  activeTab = 'tabOverview',
+  activeTab,
   onTabChange,
   donationCount = 0,
   blacklistCount = 0,
   currentUser,
-  adminToken,
-  onOpenTokenModal,
   onLogout,
   brandTitle = 'Streamer Admin',
   brandHref = '/admin'
 }: SidebarProps) {
-  const router = useRouter();
+  const pathname = usePathname();
 
-  const handleNavClick = (tabKey: string) => {
-    if (onTabChange) {
+  const handleLinkClick = (tabKey?: string) => {
+    if (onTabChange && tabKey) {
       onTabChange(tabKey);
-    } else {
-      router.push(`/admin?tab=${tabKey}`);
     }
     onClose();
   };
+
+  const isOverviewActive = pathname === '/admin' || (!activeTab && pathname === '/admin') || activeTab === 'tabOverview';
+  const isDonationsActive = pathname?.startsWith('/admin/donations') || activeTab === 'tabDonations';
+  const isSettingsActive = pathname?.startsWith('/admin/settings') || activeTab === 'tabSettings';
+  const isBlacklistActive = pathname?.startsWith('/admin/blacklist') || activeTab === 'tabBlacklist';
+  const isCustomizerActive = pathname?.startsWith('/customizer') || activeTab === 'tabCustomizer';
 
   return (
     <>
@@ -63,7 +63,7 @@ export default function Sidebar({
       {/* Sidebar Navigation */}
       <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <Link href={brandHref} className="sidebar-brand">
+          <Link href={brandHref} className="sidebar-brand" onClick={() => onClose()}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"></path>
               <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"></path>
@@ -91,23 +91,23 @@ export default function Sidebar({
             <div className="sidebar-section-title">เมนูจัดการระบบ</div>
             <ul className="sidebar-menu">
               <li>
-                <button
-                  type="button"
-                  className={`sidebar-link ${activeTab === 'tabOverview' ? 'active' : ''}`}
-                  onClick={() => handleNavClick('tabOverview')}
+                <Link
+                  href="/admin"
+                  className={`sidebar-link ${isOverviewActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabOverview')}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polygon points="10 8 16 12 10 16 10 8"></polygon>
                   </svg>
                   <span>หน้าหลัก</span>
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  type="button"
-                  className={`sidebar-link ${activeTab === 'tabDonations' ? 'active' : ''}`}
-                  onClick={() => handleNavClick('tabDonations')}
+                <Link
+                  href="/admin/donations"
+                  className={`sidebar-link ${isDonationsActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabDonations')}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -117,13 +117,13 @@ export default function Sidebar({
                   </svg>
                   <span>ประวัติการโดเนท</span>
                   {donationCount > 0 && <span className="sidebar-badge">{donationCount}</span>}
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  type="button"
-                  className={`sidebar-link ${activeTab === 'tabSettings' ? 'active' : ''}`}
-                  onClick={() => handleNavClick('tabSettings')}
+                <Link
+                  href="/admin/settings"
+                  className={`sidebar-link ${isSettingsActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabSettings')}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="4" y1="21" x2="4" y2="14"></line>
@@ -137,20 +137,20 @@ export default function Sidebar({
                     <line x1="17" y1="16" x2="23" y2="16"></line>
                   </svg>
                   <span>ตั้งค่าระบบ & OBS</span>
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  type="button"
-                  className={`sidebar-link ${activeTab === 'tabBlacklist' ? 'active' : ''}`}
-                  onClick={() => handleNavClick('tabBlacklist')}
+                <Link
+                  href="/admin/blacklist"
+                  className={`sidebar-link ${isBlacklistActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabBlacklist')}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                   </svg>
                   <span>กรองคำหยาบ</span>
                   {blacklistCount > 0 && <span className="sidebar-badge">{blacklistCount}</span>}
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -161,8 +161,8 @@ export default function Sidebar({
               <li>
                 <Link
                   href="/customizer"
-                  className={`sidebar-link ${activeTab === 'tabCustomizer' ? 'active' : ''}`}
-                  onClick={onClose}
+                  className={`sidebar-link ${isCustomizerActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabCustomizer')}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
@@ -210,33 +210,20 @@ export default function Sidebar({
           )}
 
           <div className="sidebar-footer-actions">
-            {onOpenTokenModal && (
-              <button
-                type="button"
-                className="sidebar-action-btn"
-                onClick={onOpenTokenModal}
-                title="ตั้งค่ากุญแจความปลอดภัย Token"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-                <span>{adminToken ? '🔑 Token' : '🔒 Token'}</span>
-              </button>
-            )}
             {onLogout && (
               <button
                 type="button"
                 className="sidebar-action-btn logout"
                 onClick={onLogout}
                 title="ออกจากระบบ"
+                style={{ width: '100%', justifyContent: 'center' }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                   <polyline points="16 17 21 12 16 7"></polyline>
                   <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
-                <span>ออก</span>
+                <span>ออกจากระบบ</span>
               </button>
             )}
           </div>

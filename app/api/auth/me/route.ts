@@ -20,6 +20,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     success: true,
     authenticated: true,
+    expiresAt: session.expiresAt,
     user: {
       userId: session.userId,
       username: session.username,

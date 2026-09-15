@@ -3,7 +3,7 @@ import { supabaseAdmin } from '../supabaseAdmin';
 import { User, UserSession } from '../types/database';
 
 const SESSION_SECRET = process.env.ADMIN_SECRET;
-const SESSION_MAX_AGE_SECONDS = 7 * 24 * 60 * 60; // 7 days
+export const SESSION_MAX_AGE_SECONDS = 60*60; // 1 hour (3600 seconds)
 
 /**
  * Hash password using PBKDF2 with a random salt

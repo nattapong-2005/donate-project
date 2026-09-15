@@ -43,7 +43,7 @@ export function getAuthenticatedUser(request: Request): UserSession | null {
         username: 'admin',
         displayName: 'Super Admin',
         role: 'admin',
-        expiresAt: Math.floor(Date.now() / 1000) + 86400
+        expiresAt: Math.floor(Date.now() / 1000) + 3600 // 1 hour
       };
     }
   }
@@ -61,7 +61,7 @@ export function getAuthenticatedUser(request: Request): UserSession | null {
         username: 'admin',
         displayName: 'Super Admin',
         role: 'admin',
-        expiresAt: Math.floor(Date.now() / 1000) + 86400
+        expiresAt: Math.floor(Date.now() / 1000) + 3600 // 1 hour
       };
     }
   }

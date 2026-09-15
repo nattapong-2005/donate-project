@@ -12,3 +12,6 @@ export type { ToastProps } from './Toast';
 
 export { default as Modal } from './Modal';
 export type { ModalProps } from './Modal';
+
+export { default as SessionWatcher } from './SessionWatcher';
+export type { SessionWatcherProps } from './SessionWatcher';
