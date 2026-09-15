@@ -249,7 +249,7 @@ export default function OverlayPage() {
       })
       .catch(err => console.warn('Could not load initial settings:', err));
 
-    const channel = supabase.channel('donation-alerts');
+    const channel = supabase.channel('donation-alerts', { config: { private: true } });
 
     channel
       .on('broadcast', { event: 'donation' }, (payload: any) => {
@@ -260,16 +260,6 @@ export default function OverlayPage() {
           console.log('[OBS Overlay] Settings updated live:', payload.payload);
           setSettings(prev => ({ ...prev, ...payload.payload }));
         }
-      })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'donations' }, (payload: any) => {
-        if (payload.new) handleIncomingDonation(payload.new as Donation);
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => {
-        fetch('/api/admin/settings')
-          .then(r => r.json())
-          .then(r => {
-            if (r.success && r.settings) setSettings(prev => ({ ...prev, ...r.settings }));
-          });
       })
       .subscribe((status: string) => {
         console.log('[OBS Overlay] Supabase Realtime connection status:', status);
@@ -293,7 +283,7 @@ export default function OverlayPage() {
       alignItems: 'flex-start',
       paddingTop: '50px',
       overflow: 'hidden',
-      background: 'transparent'
+      background: '#e5e7eb'
     }}>
       <audio ref={audioRef} src="/sounds/alert.mp3" preload="auto" />
 

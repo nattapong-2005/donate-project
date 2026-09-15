@@ -4,6 +4,13 @@ import { verifyAdminAuth } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
+function publicSettings(settings: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(Object.entries(settings).filter(([key]) =>
+    key.startsWith('alert_') ||
+    ['receiver_name', 'min_donate', 'tts_enabled', 'tts_min_amount'].includes(key)
+  ));
+}
+
 export async function GET(request: Request) {
   try {
     const isAdmin = verifyAdminAuth(request);
@@ -28,7 +35,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
-      settings
+      settings: isAdmin ? settings : publicSettings(settings)
     });
   } catch (err: any) {
     console.error('Get settings error:', err);
@@ -75,16 +82,13 @@ export async function POST(request: Request) {
     }
 
     // Broadcast live to OBS overlay
+    const channel = supabaseAdmin.channel('donation-alerts', { config: { private: true } });
     try {
-      const channel = supabaseAdmin.channel('donation-alerts');
-      await channel.send({
-        type: 'broadcast',
-        event: 'settings_updated',
-        payload: updatedSettings
-      });
-      supabaseAdmin.removeChannel(channel);
+      await channel.httpSend('settings_updated', publicSettings(updatedSettings));
     } catch (realtimeErr: any) {
       console.warn('Realtime broadcast error:', realtimeErr.message);
+    } finally {
+      await supabaseAdmin.removeChannel(channel).catch(() => {});
     }
 
     return NextResponse.json({

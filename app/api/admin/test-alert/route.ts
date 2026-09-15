@@ -25,13 +25,12 @@ export async function POST(request: Request) {
     };
 
     // Broadcast through Supabase Realtime channel
-    const channel = supabaseAdmin.channel('donation-alerts');
-    await channel.send({
-      type: 'broadcast',
-      event: 'donation',
-      payload: testData
-    });
-    supabaseAdmin.removeChannel(channel);
+    const channel = supabaseAdmin.channel('donation-alerts', { config: { private: true } });
+    try {
+      await channel.httpSend('donation', testData);
+    } finally {
+      await supabaseAdmin.removeChannel(channel).catch(() => {});
+    }
 
     return NextResponse.json({
       success: true,

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import confetti from 'canvas-confetti';
 import './donate.css';
 import { PromptPayResult } from '@/lib/services/promptpay';
+import { MAX_SLIP_FILE_SIZE_BYTES } from '@/lib/constants';
 
 const PRESET_AMOUNTS = [5, 20, 50, 100, 300, 500];
 const QUICK_MESSAGES = [
@@ -18,7 +19,6 @@ export default function DonatePage() {
   const [name, setName] = useState<string>('');
   const [amount, setAmount] = useState<string>('50');
   const [message, setMessage] = useState<string>('');
-  const [isSimulate, setIsSimulate] = useState<boolean>(false);
 
   // Step: 1 = Form, 2 = QR & Slip, 3 = Success
   const [step, setStep] = useState<number>(1);
@@ -88,8 +88,8 @@ export default function DonatePage() {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setErrorMessage('ขนาดไฟล์ต้องไม่เกิน 5MB');
+    if (file.size > MAX_SLIP_FILE_SIZE_BYTES) {
+      setErrorMessage('ขนาดไฟล์ต้องไม่เกิน 4MB');
       return;
     }
 
@@ -125,7 +125,7 @@ export default function DonatePage() {
 
   const handleVerifySlip = async () => {
     setErrorMessage('');
-    if (!isSimulate && !slipFile) {
+    if (!slipFile) {
       setErrorMessage('กรุณาอัปโหลดรูปภาพสลิปการโอนเงิน');
       return;
     }
@@ -133,11 +133,10 @@ export default function DonatePage() {
     setIsLoading(true);
     try {
       const formData = new FormData();
-      if (slipFile) formData.append('slip', slipFile);
+      formData.append('slip', slipFile);
       formData.append('name', name || 'ผู้สนับสนุนใจดี');
       formData.append('amount', amount);
       formData.append('message', message);
-      formData.append('simulate', isSimulate ? 'true' : 'false');
 
       const res = await fetch('/api/donate/verify-slip', {
         method: 'POST',
@@ -330,20 +329,6 @@ export default function DonatePage() {
               )}
             </div>
 
-            {/* Test Simulation Toggle */}
-            <div style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-muted)' }}>
-              <input
-                type="checkbox"
-                id="simulateCheck"
-                checked={isSimulate}
-                onChange={(e) => setIsSimulate(e.target.checked)}
-                style={{ cursor: 'pointer' }}
-              />
-              <label htmlFor="simulateCheck" style={{ cursor: 'pointer' }}>
-                โหมดทดสอบระบบ (จำลองการสลิปสำเร็จโดยไม่ต้องโอนจริง)
-              </label>
-            </div>
-
             {/* File Upload / Dropzone */}
             {!slipPreview ? (
               <div
@@ -361,7 +346,7 @@ export default function DonatePage() {
                   </svg>
                 </div>
                 <div className="dropzone-text">แตะเพื่อเลือกสลิป หรือลากไฟล์มาวางที่นี่</div>
-                <div className="dropzone-sub">รองรับ JPG, PNG, WEBP</div>
+                <div className="dropzone-sub">รองรับ JPG, PNG, WEBP ขนาดไม่เกิน 4MB</div>
               </div>
             ) : (
               <div className="preview-container" style={{ display: 'block' }}>
@@ -385,7 +370,7 @@ export default function DonatePage() {
             <button
               type="button"
               className="btn-primary"
-              disabled={isLoading || (!slipFile && !isSimulate)}
+              disabled={isLoading || !slipFile}
               onClick={handleVerifySlip}
             >
               {isLoading ? (

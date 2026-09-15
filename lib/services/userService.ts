@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { supabaseAdmin } from '../supabaseAdmin';
 import { User, UserSession } from '../types/database';
 
-const SESSION_SECRET = process.env.ADMIN_SECRET || 'donate_system_super_secret_session_key_2026';
+const SESSION_SECRET = process.env.ADMIN_SECRET;
 const SESSION_MAX_AGE_SECONDS = 7 * 24 * 60 * 60; // 7 days
 
 /**
@@ -31,6 +31,7 @@ export function verifyPassword(password: string, storedHash: string): boolean {
  * Generate a cryptographically signed session token
  */
 export function generateSessionToken(user: { id: string; username: string; displayName?: string; role?: string }): string {
+  if (!SESSION_SECRET) throw new Error('ADMIN_SECRET is required');
   const payload: UserSession = {
     userId: user.id,
     username: user.username,
@@ -52,6 +53,7 @@ export function generateSessionToken(user: { id: string; username: string; displ
  * Verify and parse a signed session token
  */
 export function verifySessionToken(token: string): UserSession | null {
+  if (!SESSION_SECRET) return null;
   if (!token || !token.includes('.')) return null;
 
   const [payloadBase64, signature] = token.split('.');
@@ -70,7 +72,7 @@ export function verifySessionToken(token: string): UserSession | null {
   try {
     const payload: UserSession = JSON.parse(Buffer.from(payloadBase64, 'base64url').toString('utf-8'));
     const now = Math.floor(Date.now() / 1000);
-    if (payload.expiresAt && payload.expiresAt < now) {
+    if (typeof payload.expiresAt !== 'number' || payload.expiresAt <= now) {
       return null; // Expired
     }
     return payload;
@@ -109,8 +111,7 @@ export async function findUserByUsername(username: string): Promise<User | null>
   }
 
   // Bootstrap Fallback: If username is 'admin', allow fallback authentication using ADMIN_SECRET
-  if (cleanUsername === 'admin') {
-    const defaultSecret = process.env.ADMIN_SECRET || 'streamer1234';
+  if (cleanUsername === 'admin' && SESSION_SECRET) {
     return {
       id: '00000000-0000-0000-0000-000000000001',
       username: 'admin',
@@ -189,10 +190,9 @@ export async function authenticateUser(
   let isValid = false;
   if (user.password_hash) {
     isValid = verifyPassword(password, user.password_hash);
-  } else if (user.username === 'admin') {
+  } else if (user.username === 'admin' && SESSION_SECRET) {
     // Fallback comparison with ADMIN_SECRET
-    const defaultSecret = process.env.ADMIN_SECRET || 'streamer1234';
-    isValid = password === defaultSecret;
+    isValid = password === SESSION_SECRET;
   }
 
   if (!isValid) {

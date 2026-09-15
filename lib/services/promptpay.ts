@@ -13,32 +13,31 @@ export interface PromptPayResult {
 /**
  * Generate PromptPay QR Code Payload & DataURL
  * @param amount - Amount in THB
- * @param customPromptpayId - Optional promptpay ID override
  */
 export async function generatePromptPayQR(
-  amount: number | string,
-  customPromptpayId: string | null = null
+  amount: number | string
 ): Promise<PromptPayResult> {
-  let promptpayId = customPromptpayId;
+  let promptpayId: string | null = null;
 
-  if (!promptpayId) {
-    try {
-      const { data } = await supabaseAdmin
-        .from('settings')
-        .select('value')
-        .eq('key', 'promptpay_id')
-        .single();
-      if (data && data.value) {
-        promptpayId = data.value;
-      }
-    } catch (e: any) {
-      console.warn('Could not fetch promptpay_id from Supabase:', e.message);
+  try {
+    const { data } = await supabaseAdmin
+      .from('settings')
+      .select('value')
+      .eq('key', 'promptpay_id')
+      .single();
+    if (data && data.value) {
+      promptpayId = data.value;
     }
+  } catch (e: any) {
+    console.warn('Could not fetch promptpay_id from Supabase:', e.message);
   }
 
   // Fallback to env
   if (!promptpayId) {
-    promptpayId = process.env.PROMPTPAY_ID || '0649520055';
+    promptpayId = process.env.PROMPTPAY_ID || null;
+  }
+  if (!promptpayId) {
+    throw new Error('กรุณาตั้งค่าหมายเลขพร้อมเพย์ก่อนสร้าง QR');
   }
 
   const parsedAmount = typeof amount === 'number' ? amount : parseFloat(amount);

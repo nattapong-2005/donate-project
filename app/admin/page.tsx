@@ -126,9 +126,9 @@ export default function AdminPage() {
 
   // Realtime subscription for incoming donations (matching Socket.IO in original app)
   useEffect(() => {
-    const channel = supabase.channel('donation-alerts');
+    const channel = supabase.channel('donation-alerts', { config: { private: true } });
     channel
-      .on('broadcast', { event: 'alert' }, (payload: any) => {
+      .on('broadcast', { event: 'donation' }, (payload: any) => {
         const alertData = payload.payload;
         if (alertData && alertData.name) {
           showToast(`มีโดเนทใหม่จากคุณ ${alertData.name} ฿${alertData.amount}`);

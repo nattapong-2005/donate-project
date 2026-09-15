@@ -4,7 +4,7 @@ import { generatePromptPayQR } from '@/lib/services/promptpay';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { amount, promptpayId } = body;
+    const { amount } = body;
 
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const qrResult = await generatePromptPayQR(parsedAmount, promptpayId);
+    const qrResult = await generatePromptPayQR(parsedAmount);
 
     return NextResponse.json({
       success: true,

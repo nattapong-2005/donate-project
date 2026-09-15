@@ -162,6 +162,10 @@ export async function verifySlip({
   const expectedReceiverName = await getSettingValue('receiver_name', process.env.RECEIVER_NAME || '');
   const expectedReceiverAccount = await getSettingValue('receiver_account', process.env.RECEIVER_ACCOUNT || '');
 
+  if (!expectedReceiverName.trim() && !expectedReceiverAccount.trim()) {
+    throw new Error('กรุณาตั้งค่าชื่อหรือเลขบัญชีผู้รับก่อนเปิดรับโดเนท');
+  }
+
   if (expectedReceiverName && expectedReceiverName.trim() !== '') {
     const receiverDisplayName: string = slipData.receiver?.displayName || '';
     const receiverName: string = slipData.receiver?.name || '';
@@ -180,7 +184,7 @@ export async function verifySlip({
     const accVal: string = (slipData.receiver?.account?.value || slipData.receiver?.proxy?.value || '').replace(/[^0-9xX]/g, '');
     const last4Expected = cleanExpectedAcc.slice(-4);
     const last4Slip = accVal.replace(/[^0-9]/g, '').slice(-4);
-    if (last4Expected && last4Slip && last4Expected !== last4Slip) {
+    if (last4Expected && last4Expected !== last4Slip) {
       const err: any = new Error(`เลขบัญชีผู้รับในสลิป (${accVal}) ไม่ตรงกับบัญชีที่กำหนด`);
       err.code = 1014;
       throw err;

@@ -74,18 +74,5 @@ export function getAuthenticatedUser(request: Request): UserSession | null {
  * Validates request via session cookie, bearer token, or secret header
  */
 export function verifyAdminAuth(request: Request): boolean {
-  const adminSecret = process.env.ADMIN_SECRET;
-
-  // Check if session token or valid bearer is present
-  const user = getAuthenticatedUser(request);
-  if (user) {
-    return true;
-  }
-
-  // If no admin secret is configured at all in env, allow access
-  if (!adminSecret || adminSecret.trim() === '') {
-    return true;
-  }
-
-  return false;
+  return getAuthenticatedUser(request)?.role === 'admin';
 }
