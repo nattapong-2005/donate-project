@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { verifyAdminAuth } from '@/lib/auth';
+import { GoalAppearance, goalAppearanceDefaults, validGoalAppearance } from '@/lib/goalAppearance';
+import { SupporterAppearance, supporterDefaults, validSupporterAppearance } from '@/lib/supporterAppearance';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,7 +59,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Invalid payload' }, { status: 400 });
     }
 
+    if (('goal_target' in newSettings && (!Number.isFinite(Number(newSettings.goal_target)) || Number(newSettings.goal_target) <= 0 || Number(newSettings.goal_target) > 9999999999)) ||
+        ('goal_title' in newSettings && (typeof newSettings.goal_title !== 'string' || !newSettings.goal_title.trim() || newSettings.goal_title.length > 160)) ||
+        ('goal_started_at' in newSettings && newSettings.goal_started_at !== '' && !Number.isFinite(Date.parse(newSettings.goal_started_at)))) {
+      return NextResponse.json({ success: false, message: 'ชื่อเป้าหมาย ยอดเงิน หรือวันเริ่มต้นไม่ถูกต้อง' }, { status: 400 });
+    }
+
     // Upsert into Supabase settings table
+    for (const key of Object.keys(goalAppearanceDefaults) as (keyof GoalAppearance)[]) {
+      if (key in newSettings && !validGoalAppearance(key, newSettings[key])) {
+        return NextResponse.json({ success: false, message: `ค่ารูปแบบเป้าหมายไม่ถูกต้อง: ${key}` }, { status: 400 });
+      }
+    }
+    for (const key of Object.keys(supporterDefaults) as (keyof SupporterAppearance)[]) {
+      if (key in newSettings && !validSupporterAppearance(key, newSettings[key])) {
+        return NextResponse.json({ success: false, message: `ค่ารูปแบบอันดับไม่ถูกต้อง: ${key}` }, { status: 400 });
+      }
+    }
     const upsertRows = Object.entries(newSettings).map(([key, value]) => ({
       key,
       value: String(value ?? '')

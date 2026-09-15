@@ -46,6 +46,7 @@ export default function Sidebar({
   };
 
   const isOverviewActive = pathname === '/admin' || (!activeTab && pathname === '/admin') || activeTab === 'tabOverview';
+  const isAnalyticsActive = pathname?.startsWith('/admin/analytics') || activeTab === 'tabAnalytics';
   const isDonationsActive = pathname?.startsWith('/admin/donations') || activeTab === 'tabDonations';
   const isSettingsActive = pathname?.startsWith('/admin/settings') || activeTab === 'tabSettings';
   const isBlacklistActive = pathname?.startsWith('/admin/blacklist') || activeTab === 'tabBlacklist';
@@ -105,6 +106,20 @@ export default function Sidebar({
               </li>
               <li>
                 <Link
+                  href="/admin/analytics"
+                  className={`sidebar-link ${isAnalyticsActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabAnalytics')}
+                >
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
+                  <span>สถิติเชิงลึก</span>
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/admin/donations"
                   className={`sidebar-link ${isDonationsActive ? 'active' : ''}`}
                   onClick={() => handleLinkClick('tabDonations')}
@@ -137,6 +152,21 @@ export default function Sidebar({
                     <line x1="17" y1="16" x2="23" y2="16"></line>
                   </svg>
                   <span>ตั้งค่าระบบ & OBS</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/widgets"
+                  className={`sidebar-link ${pathname?.startsWith('/admin/widgets') ? 'active' : ''}`}
+                  onClick={() => handleLinkClick()}
+                >
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                    <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                    <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                    <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                  </svg>
+                  <span>วิดเจ็ต OBS & เป้าหมาย</span>
                 </Link>
               </li>
               <li>

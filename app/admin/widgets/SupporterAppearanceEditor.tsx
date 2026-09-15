@@ -1,0 +1,23 @@
+import { goalFontOptions } from '@/lib/goalAppearance';
+import { SupporterAppearance, SupporterMode, supporterDefaults, supporterModes, supporterRanges } from '@/lib/supporterAppearance';
+import SupporterWidget from '@/app/overlay/supporters/SupporterWidget';
+
+const colors: [keyof SupporterAppearance, string][] = [['supporter_bg_color', 'พื้นหลังการ์ด'], ['supporter_text_color', 'ชื่อและข้อความ'], ['supporter_amount_color', 'ยอดบริจาค'], ['supporter_border_color', 'ขอบการ์ดและเส้นแบ่ง'], ['supporter_row_color', 'พื้นหลังรายการ'], ['supporter_rank_color', 'หมายเลขอันดับ']];
+const sizes: [keyof SupporterAppearance, string, string][] = [['supporter_width', 'ความกว้าง', 'px'], ['supporter_padding', 'ระยะขอบด้านใน', 'px'], ['supporter_radius', 'ความโค้งการ์ด', 'px'], ['supporter_title_size', 'ขนาดหัวข้อ', 'px'], ['supporter_name_size', 'ขนาดชื่อ', 'px'], ['supporter_amount_size', 'ขนาดยอดเงิน', 'px'], ['supporter_row_gap', 'ระยะห่างรายการ', 'px'], ['supporter_opacity', 'ความทึบพื้นหลัง', '%'], ['supporter_limit', 'จำนวนรายการ', 'คน']];
+const exampleDonors = Array.from({ length: 10 }, (_, index) => ({ name: ['คุณสมชาย', 'น้องฟ้า', 'ผู้สนับสนุนใจดี', 'คุณมิน', 'พี่บอย'][index % 5], amount: 2500 - index * 200 }));
+
+export default function SupporterAppearanceEditor({ value, onChange, disabled }: { value: SupporterAppearance; onChange: (next: SupporterAppearance) => void; disabled: boolean }) {
+  const update = (key: keyof SupporterAppearance, next: string) => onChange({ ...value, [key]: next });
+  return <div className="supporter-editor"><div className="goal-editor-heading"><div><h2>ตั้งค่าอันดับผู้โดเนท</h2><p>ตั้งรูปแบบสำหรับรายชื่อล่าสุดและอันดับรายวัน รายเดือน ตลอดเวลา</p></div><button className="widget-button widget-button-total" type="button" disabled={disabled} onClick={() => onChange({ ...supporterDefaults })}>คืนค่าเริ่มต้น</button></div>
+    <fieldset disabled={disabled} className="goal-editor-controls"><legend>ข้อมูลและรูปแบบ</legend><div className="goal-control-grid">
+      <label className="goal-font-control">โหมดเริ่มต้น<select value={value.supporter_mode} onChange={event => update('supporter_mode', event.target.value)}>{Object.entries(supporterModes).map(([mode, label]) => <option key={mode} value={mode}>{label}</option>)}</select></label>
+      <label className="goal-font-control">ฟอนต์<select value={value.supporter_font} onChange={event => update('supporter_font', event.target.value)}>{goalFontOptions.map(font => <option key={font.value} value={font.value}>{font.label}</option>)}</select></label>
+      <label className="goal-font-control">รูปแบบรายการ<select value={value.supporter_layout} onChange={event => update('supporter_layout', event.target.value)}><option value="list">รายการพร้อมเส้นแบ่ง</option><option value="cards">กล่องแยกแต่ละคน</option></select></label>
+      <label>หัวข้อกำหนดเอง<input maxLength={160} value={value.supporter_title} placeholder="เว้นว่างเพื่อใช้หัวข้อตามโหมด" onChange={event => update('supporter_title', event.target.value)} /></label>
+    </div></fieldset>
+    <fieldset disabled={disabled} className="goal-editor-controls"><legend>สี</legend><div className="goal-control-grid">{colors.map(([key, label]) => <label className="goal-color-control" key={key}><span>{label}</span><div><input type="color" aria-label={label} value={value[key]} onChange={event => update(key, event.target.value)} /><code>{value[key]}</code></div></label>)}</div></fieldset>
+    <fieldset disabled={disabled} className="goal-editor-controls"><legend>ขนาดและพื้นหลัง</legend><div className="goal-control-grid">{sizes.map(([key, label, unit]) => { const [min, max] = supporterRanges[key]!; return <label className="goal-range-control" key={key}><span>{label}<strong>{value[key]} {unit}</strong></span><input type="range" min={min} max={max} step={1} value={value[key]} onChange={event => update(key, event.target.value)} /></label>; })}</div></fieldset>
+    <fieldset disabled={disabled} className="goal-editor-controls"><legend>การแสดงผล</legend><div className="goal-toggle-grid">{([['supporter_show_border', 'แสดงขอบการ์ดพื้นหลัง'], ['supporter_show_title', 'แสดงหัวข้อ'], ['supporter_show_amount', 'แสดงยอดเงิน'], ['supporter_show_rank', 'แสดงหมายเลขอันดับ']] as [keyof SupporterAppearance, string][]).map(([key, label]) => <label key={key}><input type="checkbox" checked={value[key] === 'true'} onChange={event => update(key, String(event.target.checked))} />{label}</label>)}</div></fieldset>
+    <div className="goal-draft-heading"><strong>พรีวิวก่อนบันทึก</strong><span>รายชื่อและยอดตัวอย่าง</span></div><div className="goal-draft-preview"><SupporterWidget donors={exampleDonors} appearance={value} mode={value.supporter_mode as SupporterMode} /></div>
+  </div>;
+}

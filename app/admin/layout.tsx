@@ -111,6 +111,7 @@ export default function AdminLayout({
   }, [fetchCounts, showToast]);
 
   const getPageTitle = () => {
+    if (pathname?.startsWith('/admin/analytics')) return 'สถิติเชิงลึก & แดชบอร์ด (Analytics)';
     if (pathname?.startsWith('/admin/donations')) return 'ประวัติการโดเนท';
     if (pathname?.startsWith('/admin/settings')) return 'ตั้งค่าระบบ & OBS';
     if (pathname?.startsWith('/admin/blacklist')) return 'กรองคำหยาบ (Blacklist)';
