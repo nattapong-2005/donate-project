@@ -187,9 +187,11 @@ export default function OverlayPage() {
 
     window.speechSynthesis.cancel();
 
-    let textToSpeak = `${item.name || 'มีผู้สนับสนุน'} ได้ร่วมบริจาค ${itemAmt} บาท`;
+    const donorName = item.name?.trim() || 'Anonymous';
+    const actionText = (s.alert_action_text || 'โดเนทให้').trim();
+    let textToSpeak = `${donorName} ${actionText} ${itemAmt} บาท`;
     if (item.message && item.message.trim() !== '') {
-      textToSpeak += ` ข้อความว่า ${item.message}`;
+      textToSpeak += ` ${item.message.trim()}`;
     }
 
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -233,11 +235,38 @@ export default function OverlayPage() {
     }, durationMs);
   }
 
+  const [connStatus, setConnStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+  const [isOBS, setIsOBS] = useState<boolean>(false);
+
   function handleIncomingDonation(data: Donation) {
     console.log('[OBS Overlay] Received donation alert:', data);
     queueRef.current.push(data);
     processQueue();
   }
+
+  function triggerTestAlert() {
+    handleIncomingDonation({
+      id: 'test-preview-' + Date.now(),
+      name: 'ผู้ชมทดสอบระบบ',
+      amount: 100,
+      message: 'ทดสอบเสียงแจ้งเตือนและการแสดงผลบนหน้าจอ OBS สำเร็จ!',
+      sender_bank: 'PROMPTPAY',
+      created_at: new Date().toLocaleTimeString('th-TH'),
+      isTest: true
+    });
+  }
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsOBS(Boolean((window as any).obsstudio) || navigator.userAgent.includes('OBS'));
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('test') === '1' || params.get('preview') === '1') {
+        setTimeout(() => {
+          triggerTestAlert();
+        }, 800);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     fetch('/api/admin/settings')
@@ -249,7 +278,7 @@ export default function OverlayPage() {
       })
       .catch(err => console.warn('Could not load initial settings:', err));
 
-    const channel = supabase.channel('donation-alerts', { config: { private: true } });
+    const channel = supabase.channel('donation-alerts');
 
     channel
       .on('broadcast', { event: 'donation' }, (payload: any) => {
@@ -263,6 +292,11 @@ export default function OverlayPage() {
       })
       .subscribe((status: string) => {
         console.log('[OBS Overlay] Supabase Realtime connection status:', status);
+        if (status === 'SUBSCRIBED') {
+          setConnStatus('connected');
+        } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          setConnStatus('error');
+        }
       });
 
     return () => {
@@ -283,9 +317,71 @@ export default function OverlayPage() {
       alignItems: 'flex-start',
       paddingTop: '50px',
       overflow: 'hidden',
-      background: '#e5e7eb'
+      background: 'transparent',
+      position: 'relative'
     }}>
       <audio ref={audioRef} src="/sounds/alert.mp3" preload="auto" />
+
+      {/* Floating Helper Toolbar when viewed directly in browser (auto-hidden in OBS or during active alert) */}
+      {!currentAlert && !isOBS && (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          background: 'rgba(15, 23, 42, 0.88)',
+          backdropFilter: 'blur(10px)',
+          padding: '10px 18px',
+          borderRadius: '999px',
+          color: '#ffffff',
+          fontSize: '13px',
+          fontWeight: 500,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+          zIndex: 9999,
+          userSelect: 'none',
+          border: '1px solid rgba(255,255,255,0.1)'
+        }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: connStatus === 'connected' ? '#10b981' : connStatus === 'error' ? '#ef4444' : '#f59e0b',
+              boxShadow: connStatus === 'connected' ? '0 0 8px #10b981' : 'none'
+            }} />
+            <span style={{ color: '#e2e8f0', fontSize: '12.5px' }}>
+              {connStatus === 'connected' ? 'Realtime Connected' : connStatus === 'error' ? 'Connection Error' : 'กำลังเชื่อมต่อ...'}
+            </span>
+          </span>
+
+          <span style={{ color: '#475569' }}>|</span>
+
+          <button
+            type="button"
+            onClick={triggerTestAlert}
+            style={{
+              background: '#2563eb',
+              color: '#ffffff',
+              border: 'none',
+              padding: '5px 14px',
+              borderRadius: '999px',
+              fontSize: '12px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              transition: 'background 0.15s ease'
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.background = '#1d4ed8')}
+            onMouseOut={(e) => (e.currentTarget.style.background = '#2563eb')}
+          >
+            ⚡ กดเพื่อทดสอบ Alert
+          </button>
+        </div>
+      )}
 
       <div className={`alert-wrapper ${animClass} ${alertAnimState}`}>
         {currentAlert && (

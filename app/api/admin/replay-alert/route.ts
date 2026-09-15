@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       isReplay: true
     };
 
-    const channel = supabaseAdmin.channel('donation-alerts', { config: { private: true } });
+    const channel = supabaseAdmin.channel('donation-alerts');
     try {
       await channel.httpSend('donation', replayData);
     } finally {

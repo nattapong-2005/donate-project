@@ -181,16 +181,8 @@ export default function DonatePage() {
       <div className="container">
         {/* Streamer Profile Header */}
         <div className="header-card">
-          {/* <div className="avatar-wrapper">
-            <div className="avatar-img">
-              🎮
-            </div>
-            <div className="live-badge">
-              <span className="live-dot"></span> LIVE
-            </div>
-          </div> */}
-          <h1 className="streamer-name">
-            {systemSettings?.receiver_name || 'localhostvlr'}
+          <h1 className="streamer-name text-2xl">
+            localhostvlr
           </h1>
           <p className="streamer-desc">
             ส่งกำลังใจและข้อความขึ้นจอสดระหว่างสตรีมได้ที่นี่

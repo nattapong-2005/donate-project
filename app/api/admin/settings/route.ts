@@ -82,7 +82,7 @@ export async function POST(request: Request) {
     }
 
     // Broadcast live to OBS overlay
-    const channel = supabaseAdmin.channel('donation-alerts', { config: { private: true } });
+    const channel = supabaseAdmin.channel('donation-alerts');
     try {
       await channel.httpSend('settings_updated', publicSettings(updatedSettings));
     } catch (realtimeErr: any) {

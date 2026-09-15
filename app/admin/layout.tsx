@@ -94,7 +94,7 @@ export default function AdminLayout({
 
   // Realtime subscription for incoming donation alerts across all admin routes
   useEffect(() => {
-    const channel = supabase.channel('admin-layout-alerts', { config: { private: true } });
+    const channel = supabase.channel('donation-alerts');
     channel
       .on('broadcast', { event: 'donation' }, (payload: any) => {
         const alertData = payload.payload;

@@ -130,7 +130,7 @@ export async function POST(request: Request) {
     }
 
     // 6. Broadcast event to Supabase Realtime channel for instant OBS alert
-    const channel = supabaseAdmin.channel('donation-alerts', { config: { private: true } });
+    const channel = supabaseAdmin.channel('donation-alerts');
     try {
       await channel.httpSend('donation', {
         id: inserted.id,

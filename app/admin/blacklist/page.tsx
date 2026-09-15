@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { ShieldAlert, Plus, X, Loader2 } from 'lucide-react';
 import { BlacklistWord } from '@/lib/types/database';
 import { useAdmin } from '../AdminContext';
 
@@ -91,19 +92,27 @@ export default function AdminBlacklistPage() {
 
   return (
     <div className="panel">
-      <div className="panel-header">
-        <h2 className="panel-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
+      <div className="panel-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+        <h2 className="panel-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ShieldAlert size={18} />
           จัดการคำหยาบและคำต้องห้าม (Blacklist)
         </h2>
+        <span style={{
+          fontSize: '12px',
+          fontWeight: 600,
+          padding: '4px 10px',
+          borderRadius: '999px',
+          background: '#f1f5f9',
+          color: '#475569'
+        }}>
+          ทั้งหมด {blacklist.length} คำ
+        </span>
       </div>
       <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '16px' }}>
         คำที่อยู่ในรายการนี้จะถูกเซ็นเซอร์เป็น <code style={{ color: 'var(--danger)', background: '#fef2f2', padding: '2px 6px', borderRadius: '4px' }}>***</code> โดยอัตโนมัติก่อนส่งขึ้นหน้าจอ OBS
       </p>
 
-      <form onSubmit={handleAddBlacklist} style={{ display: 'flex', gap: '10px', maxWidth: '450px', marginBottom: '24px' }}>
+      <form onSubmit={handleAddBlacklist} className="blacklist-form">
         <input
           type="text"
           className="input-control"
@@ -112,8 +121,28 @@ export default function AdminBlacklistPage() {
           onChange={(e) => setNewWord(e.target.value)}
           disabled={isAdding}
         />
-        <button type="submit" className="btn" disabled={isAdding || !newWord.trim()}>
-          {isAdding ? 'กำลังเพิ่ม...' : 'เพิ่มคำ'}
+        <button
+          type="submit"
+          className="btn"
+          disabled={isAdding || !newWord.trim()}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px'
+          }}
+        >
+          {isAdding ? (
+            <>
+              <Loader2 size={16} className="spinner-icon" />
+              <span>กำลังเพิ่ม...</span>
+            </>
+          ) : (
+            <>
+              <Plus size={16} />
+              <span>เพิ่มคำ</span>
+            </>
+          )}
         </button>
       </form>
 
@@ -126,15 +155,15 @@ export default function AdminBlacklistPage() {
           blacklist.map((item) => (
             <span key={item.id} className="tag-item">
               {item.word}
-              <span
+              <button
+                type="button"
                 className="tag-remove"
                 onClick={() => handleDeleteBlacklist(item.id)}
-                title="ลบคำนี้"
-                role="button"
-                tabIndex={0}
+                title={`ลบ "${item.word}" ออกจากแบล็กลิสต์`}
+                aria-label={`ลบคำ ${item.word}`}
               >
-                ×
-              </span>
+                <X size={12} strokeWidth={2.5} />
+              </button>
             </span>
           ))
         )}

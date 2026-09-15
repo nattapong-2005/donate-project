@@ -72,6 +72,30 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'LINESeedSansTH-Regular';
+  src: url('/font/LINESeedSansTH-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINESeedSansTH-ExtraBold';
+  src: url('/font/LINESeedSansTH-ExtraBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINESeedSansTH-ExtraBold';
+  src: url('/font/LINESeedSansTH-ExtraBold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Premium Minimal Light Theme (Original Aesthetic) */
   --bg-page: #f8fafc;
@@ -410,6 +434,28 @@ body {
 /* ==========================================================================
    HUB / LANDING PAGE STYLES
    ========================================================================== */
+.hub-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  text-align: left;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .hub-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hub-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+}
+
 .hub-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;

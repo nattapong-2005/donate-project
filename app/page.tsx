@@ -30,7 +30,7 @@ export default function HomePage() {
       <div className="bg-mesh" />
 
       <div style={{
-        maxWidth: '880px',
+        maxWidth: '1200px',
         width: '100%',
         textAlign: 'center',
         position: 'relative',
@@ -52,15 +52,15 @@ export default function HomePage() {
           marginBottom: '20px'
         }}>
           <Zap size={14} style={{ color: '#f59e0b', fill: '#f59e0b' }} />
-          <span>Next.js + TypeScript + Supabase</span>
+          <span>Live Stream Alert • Real-Time Donation</span>
           <span style={{ color: '#cbd5e1' }}>•</span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#059669' }}>
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
-            Serverless Realtime
+            Online
           </span>
         </div>
 
-        <h1 style={{
+        <h1 className='font-black' style={{
           fontSize: 'clamp(30px, 4.5vw, 44px)',
           fontWeight: 800,
           lineHeight: 1.25,
@@ -78,19 +78,14 @@ export default function HomePage() {
           margin: '0 auto 36px auto',
           lineHeight: 1.6
         }}>
-          แจ้งเตือนบน OBS ทันทีด้วย Supabase Realtime พร้อมระบบสร้าง QR พร้อมเพย์และตรวจสลิปอัตโนมัติ (Minimal Light Edition)
+          แจ้งเตือนบนหน้าจอ Streamer แบบ Real-Time รองรับ QR Promptpay
         </p>
 
         {/* 4 Cards Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '18px',
-          textAlign: 'left'
-        }}>
+        <div className="hub-grid">
           {/* Donate Page Card */}
-          <Link href="/donate" style={{ textDecoration: 'none' }}>
-            <div className="hub-card">
+          <Link href="/donate" style={{ textDecoration: 'none', display: 'flex' }}>
+            <div className="hub-card" style={{ width: '100%' }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -115,11 +110,11 @@ export default function HomePage() {
               <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
                 หน้าโดเนท (Donate)
               </h3>
-              <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+              <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.55, margin: '0 0 16px 0', flex: 1 }}>
                 สำหรับผู้ชมสตรีม สแกน QR พร้อมเพย์ อัปโหลดสลิป และส่งข้อความขึ้นจอ
               </p>
               <div style={{
-                marginTop: '16px',
+                marginTop: 'auto',
                 paddingTop: '12px',
                 borderTop: '1px dashed #f1f5f9',
                 display: 'flex',
@@ -136,8 +131,8 @@ export default function HomePage() {
           </Link>
 
           {/* OBS Overlay Card */}
-          <Link href="/overlay" style={{ textDecoration: 'none' }}>
-            <div className="hub-card">
+          <Link href="/overlay" style={{ textDecoration: 'none', display: 'flex' }}>
+            <div className="hub-card" style={{ width: '100%' }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -162,11 +157,11 @@ export default function HomePage() {
               <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#2563eb', marginBottom: '6px' }}>
                 OBS Overlay
               </h3>
-              <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+              <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.55, margin: '0 0 16px 0', flex: 1 }}>
                 นำ URL หน้านี้ไปใส่ใน Browser Source ของโปรแกรม OBS / Streamlabs
               </p>
               <div style={{
-                marginTop: '16px',
+                marginTop: 'auto',
                 paddingTop: '12px',
                 borderTop: '1px dashed #f1f5f9',
                 display: 'flex',
@@ -183,8 +178,8 @@ export default function HomePage() {
           </Link>
 
           {/* Customizer Card */}
-          <Link href="/customizer" style={{ textDecoration: 'none' }}>
-            <div className="hub-card">
+          <Link href="/customizer" style={{ textDecoration: 'none', display: 'flex' }}>
+            <div className="hub-card" style={{ width: '100%' }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -209,11 +204,11 @@ export default function HomePage() {
               <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#7c3aed', marginBottom: '6px' }}>
                 ปรับแต่งธีม (Customizer)
               </h3>
-              <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+              <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.55, margin: '0 0 16px 0', flex: 1 }}>
                 ปรับแต่งหน้าตา สี ฟอนต์ แอนิเมชัน และเสียงแจ้งเตือนแบบสด ๆ
               </p>
               <div style={{
-                marginTop: '16px',
+                marginTop: 'auto',
                 paddingTop: '12px',
                 borderTop: '1px dashed #f1f5f9',
                 display: 'flex',
@@ -230,8 +225,8 @@ export default function HomePage() {
           </Link>
 
           {/* Admin Card */}
-          <Link href="/admin" style={{ textDecoration: 'none' }}>
-            <div className="hub-card">
+          <Link href="/admin" style={{ textDecoration: 'none', display: 'flex' }}>
+            <div className="hub-card" style={{ width: '100%' }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -256,11 +251,11 @@ export default function HomePage() {
               <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#059669', marginBottom: '6px' }}>
                 แดชบอร์ดแอดมิน (Admin)
               </h3>
-              <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.55, margin: 0 }}>
+              <p style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.55, margin: '0 0 16px 0', flex: 1 }}>
                 ดูยอดเงินโดเนท สถิติ ย้อนหลัง ทดสอบเสียง และจัดการคำห้าม
               </p>
               <div style={{
-                marginTop: '16px',
+                marginTop: 'auto',
                 paddingTop: '12px',
                 borderTop: '1px dashed #f1f5f9',
                 display: 'flex',

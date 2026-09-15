@@ -116,7 +116,7 @@ const PRESETS: Record<string, Partial<AlertSettings>> = {
   },
   dark_luxury: {
     alert_theme: 'dark_luxury',
-    alert_font: 'Kanit',
+    alert_font: 'LINESeedSansTH-ExtraBold',
     alert_card_bg: '#0f172a',
     alert_card_blur: 0,
     alert_card_width: 580,
@@ -147,7 +147,7 @@ const PRESETS: Record<string, Partial<AlertSettings>> = {
   },
   cyber_neon: {
     alert_theme: 'cyber_neon',
-    alert_font: 'Chakra Petch',
+    alert_font: 'LINESeedSansTH-ExtraBold',
     alert_card_bg: '#090d16',
     alert_card_blur: 0,
     alert_card_width: 600,
@@ -178,7 +178,7 @@ const PRESETS: Record<string, Partial<AlertSettings>> = {
   },
   sweet_pastel: {
     alert_theme: 'sweet_pastel',
-    alert_font: 'Mitr',
+    alert_font: 'LINESeedSansTH',
     alert_card_bg: '#fff5f7',
     alert_card_blur: 0,
     alert_card_width: 560,
@@ -209,7 +209,7 @@ const PRESETS: Record<string, Partial<AlertSettings>> = {
   },
   glass_frost: {
     alert_theme: 'glass_frost',
-    alert_font: 'Prompt',
+    alert_font: 'LINESeedSansTH',
     alert_card_bg: 'rgba(255, 255, 255, 0.75)',
     alert_card_blur: 16,
     alert_card_width: 580,
@@ -271,7 +271,7 @@ const PRESETS: Record<string, Partial<AlertSettings>> = {
   },
   dark_glass: {
     alert_theme: 'dark_glass',
-    alert_font: 'Chakra Petch',
+    alert_font: 'LINESeedSansTH-ExtraBold',
     alert_card_bg: 'rgba(15, 23, 42, 0.65)',
     alert_card_blur: 16,
     alert_card_width: 600,
@@ -1227,14 +1227,12 @@ export default function CustomizerPage() {
                   value={settings.alert_font || 'LINESeedSansTH'}
                   onChange={(e) => updateField('alert_font', e.target.value)}
                 >
-                  <option value="LINESeedSansTH">LINE Seed Sans TH (แนะนำ)</option>
-                  <option value="Kanit">Kanit (สไตล์ยอดนิยม กึ่งทางการ)</option>
-                  <option value="Prompt">Prompt (โมเดิร์น คมชัด อ่านง่าย)</option>
-                  <option value="Chakra Petch">Chakra Petch (เกมมิ่ง สไตล์ Cyber / Sci-Fi)</option>
-                  <option value="Mitr">Mitr (กลม มน สบายตา)</option>
-                  <option value="Sarabun">Sarabun (ทางการ สะอาด เรียบง่าย)</option>
-                  <option value="Outfit">Outfit / Inter (อินเตอร์ คลาสสิก)</option>
+                  <option value="LINESeedSansTH">LINE Seed Sans TH (Regular ปกติ)</option>
+                  <option value="LINESeedSansTH-ExtraBold">LINE Seed Sans TH (ExtraBold หนาพิเศษ)</option>
                 </select>
+                <span style={{ fontSize: '12px', color: 'var(--text-dim)', marginTop: '6px', display: 'block' }}>
+                  * ฟอนต์และสีที่ตั้งค่าจะแสดงผลเฉพาะการ์ดแจ้งเตือน (Donate Alert UI) เท่านั้น เว็บแอปส่วนอื่นจะใช้ฟอนต์ Regular ปกติ
+                </span>
               </div>
 
               <div className="color-picker-grid">

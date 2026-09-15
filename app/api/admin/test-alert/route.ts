@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     };
 
     // Broadcast through Supabase Realtime channel
-    const channel = supabaseAdmin.channel('donation-alerts', { config: { private: true } });
+    const channel = supabaseAdmin.channel('donation-alerts');
     try {
       await channel.httpSend('donation', testData);
     } finally {
