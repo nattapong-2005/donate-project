@@ -378,6 +378,11 @@ export default function CustomizerPage() {
   const [currentUser, setCurrentUser] = useState<{ username: string; displayName?: string } | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
+  // Test Alert Customization State
+  const [testName, setTestName] = useState<string>('สมชาย ใจดี');
+  const [testAmount, setTestAmount] = useState<number | string>(50);
+  const [testMessage, setTestMessage] = useState<string>('สวัสดีครับ เป็นกำลังใจให้นะครับ สตรีมสนุกมาก!');
+
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
@@ -493,13 +498,14 @@ export default function CustomizerPage() {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (adminToken) headers['x-admin-token'] = adminToken;
 
+      const parsedAmount = parseFloat(String(testAmount));
       const res = await fetch('/api/admin/test-alert', {
         method: 'POST',
         headers,
         body: JSON.stringify({
-          name: 'test',
-          amount: 50,
-          message: 'สวัสดีครับ'
+          name: (testName || '').trim() || 'Anonymous',
+          amount: !isNaN(parsedAmount) && parsedAmount > 0 ? parsedAmount : 50,
+          message: (testMessage || '').trim()
         })
       });
       const data = await res.json();
@@ -1649,7 +1655,7 @@ export default function CustomizerPage() {
                     style={{ fontSize: `${settings.alert_title_size || 26}px` }}
                   >
                     <span className="donator-name" style={{ color: settings.alert_name_color || '#0f172a' }}>
-                      test
+                      {(testName || '').trim() || 'Anonymous'}
                     </span>
                     <span className="alert-action-text" style={{ color: settings.alert_action_color || '#64748b' }}>
                       {settings.alert_action_text || 'โดเนทให้'}
@@ -1665,24 +1671,116 @@ export default function CustomizerPage() {
                         padding: settings.alert_amount_bg === 'transparent' ? '0' : '2px 14px'
                       }}
                     >
-                      <span className="alert-amount-val">50</span>
+                      <span className="alert-amount-val">
+                        {testAmount !== '' && !isNaN(Number(testAmount)) ? Number(testAmount).toLocaleString('th-TH') : 0}
+                      </span>
                       <span className="alert-currency">บาท</span>
                     </span>
                   </div>
 
-                  <div
-                    className="alert-message"
-                    style={{
-                      background: settings.alert_msg_bg || '#f8fafc',
-                      color: settings.alert_msg_color || '#334155',
-                      fontSize: `${settings.alert_msg_size || 18}px`,
-                      border: settings.alert_msg_bg === 'transparent' ? 'none' : `1px solid ${settings.alert_msg_border || '#e2e8f0'}`,
-                      padding: settings.alert_msg_bg === 'transparent' ? '4px 0' : '12px 18px'
+                  {(testMessage || '').trim() !== '' && (
+                    <div
+                      className="alert-message"
+                      style={{
+                        background: settings.alert_msg_bg || '#f8fafc',
+                        color: settings.alert_msg_color || '#334155',
+                        fontSize: `${settings.alert_msg_size || 18}px`,
+                        border: settings.alert_msg_bg === 'transparent' ? 'none' : `1px solid ${settings.alert_msg_border || '#e2e8f0'}`,
+                        padding: settings.alert_msg_bg === 'transparent' ? '4px 0' : '12px 18px'
+                      }}
+                    >
+                      {testMessage}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Test Alert Data Configuration Card */}
+            <div className="test-data-card">
+              <div className="test-data-header">
+                <div className="test-data-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  <span>กำหนดข้อความและข้อมูลทดสอบ</span>
+                </div>
+                <div className="test-presets-wrap">
+                  <button
+                    type="button"
+                    className="test-preset-btn"
+                    onClick={() => {
+                      setTestName('สมชาย ใจดี');
+                      setTestAmount(50);
+                      setTestMessage('สวัสดีครับ เป็นกำลังใจให้นะครับ สตรีมสนุกมาก!');
                     }}
                   >
-                    สวัสดีครับ
-                  </div>
+                    ทั่วไป
+                  </button>
+                  <button
+                    type="button"
+                    className="test-preset-btn"
+                    onClick={() => {
+                      setTestName('สายเปย์ ตัวจริง');
+                      setTestAmount(1000);
+                      setTestMessage('ขอให้มีความสุขกับการสตรีม เติมพลังให้ครับ 🎉');
+                    }}
+                  >
+                    สายเปย์
+                  </button>
+                  <button
+                    type="button"
+                    className="test-preset-btn"
+                    onClick={() => {
+                      setTestName('Anonymous');
+                      setTestAmount(100);
+                      setTestMessage('');
+                    }}
+                  >
+                    ไม่มีข้อความ
+                  </button>
                 </div>
+              </div>
+
+              <div className="test-data-grid">
+                <div className="test-field">
+                  <label>ชื่อผู้โดเนท (Donor Name)</label>
+                  <input
+                    type="text"
+                    value={testName}
+                    onChange={e => setTestName(e.target.value)}
+                    placeholder="เช่น สมชาย ใจดี, Anonymous"
+                    maxLength={50}
+                  />
+                </div>
+                <div className="test-field">
+                  <label>ยอดเงิน (บาท)</label>
+                  <input
+                    type="number"
+                    value={testAmount}
+                    onChange={e => setTestAmount(e.target.value === '' ? '' : Number(e.target.value))}
+                    placeholder="50"
+                    min={1}
+                    step={1}
+                  />
+                </div>
+              </div>
+
+              <div className="test-field">
+                <label>
+                  <span>ข้อความโดเนท (Message)</span>
+                  <span style={{ fontSize: '11px', color: 'var(--text-dim)', fontWeight: 400 }}>
+                    {testMessage.length}/200 ตัวอักษร
+                  </span>
+                </label>
+                <textarea
+                  value={testMessage}
+                  onChange={e => setTestMessage(e.target.value)}
+                  placeholder="พิมพ์ข้อความที่ต้องการให้แสดงและอ่านออกเสียง TTS..."
+                  rows={2}
+                  maxLength={200}
+                />
               </div>
             </div>
 

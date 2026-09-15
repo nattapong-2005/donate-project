@@ -411,6 +411,106 @@ input[type="range"] {
   background: #ffffff;
 }
 
+/* Test Alert Customization Card */
+.test-data-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.test-data-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.test-data-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.test-presets-wrap {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.test-preset-btn {
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.test-preset-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+  border-color: #cbd5e1;
+}
+
+.test-data-grid {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 10px;
+}
+
+.test-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.test-field label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+.test-field input,
+.test-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--text-main);
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.test-field input:focus,
+.test-field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.test-field textarea {
+  resize: vertical;
+  min-height: 48px;
+}
+
 /* Preview Controls Box */
 .preview-controls-box {
   display: grid;
@@ -681,6 +781,10 @@ input[type="range"] {
   }
 
   .preview-controls-box {
+    grid-template-columns: 1fr;
+  }
+
+  .test-data-grid {
     grid-template-columns: 1fr;
   }
 
