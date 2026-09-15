@@ -113,6 +113,14 @@ export default function OverlayPage() {
     if (s.alert_action_color) root.style.setProperty('--alert-action-color', s.alert_action_color);
     if (s.alert_title_size) root.style.setProperty('--alert-title-size', `${s.alert_title_size}px`);
 
+    if (s.alert_letter_spacing !== undefined) root.style.setProperty('--alert-letter-spacing', `${s.alert_letter_spacing}px`);
+    if (s.alert_word_gap !== undefined) root.style.setProperty('--alert-word-gap', `${s.alert_word_gap}px`);
+    if (s.alert_text_margin_top !== undefined) root.style.setProperty('--alert-text-margin-top', `${s.alert_text_margin_top}px`);
+    if (s.alert_text_margin_bottom !== undefined) root.style.setProperty('--alert-text-margin-bottom', `${s.alert_text_margin_bottom}px`);
+    if (s.alert_text_margin_left !== undefined) root.style.setProperty('--alert-text-margin-left', `${s.alert_text_margin_left}px`);
+    if (s.alert_text_margin_right !== undefined) root.style.setProperty('--alert-text-margin-right', `${s.alert_text_margin_right}px`);
+    if (s.alert_line_height !== undefined) root.style.setProperty('--alert-line-height', `${s.alert_line_height}`);
+
     if (s.alert_amount_bg) root.style.setProperty('--alert-amount-bg', s.alert_amount_bg);
     if (s.alert_amount_color) root.style.setProperty('--alert-amount-color', s.alert_amount_color);
     if (s.alert_amount_border) root.style.setProperty('--alert-amount-border', s.alert_amount_border);

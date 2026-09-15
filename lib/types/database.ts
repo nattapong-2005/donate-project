@@ -65,6 +65,13 @@ export interface AlertSettings {
   alert_action_color?: string;
   alert_action_text?: string;
   alert_title_size?: number | string;
+  alert_letter_spacing?: number | string;
+  alert_word_gap?: number | string;
+  alert_text_margin_top?: number | string;
+  alert_text_margin_bottom?: number | string;
+  alert_text_margin_left?: number | string;
+  alert_text_margin_right?: number | string;
+  alert_line_height?: number | string;
   alert_amount_bg?: string;
   alert_amount_color?: string;
   alert_amount_border?: string;

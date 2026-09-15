@@ -276,21 +276,25 @@ body.overlay-body {
 .alert-headline {
   font-size: var(--alert-title-size);
   font-weight: 700;
-  line-height: 1.35;
-  margin-bottom: 10px;
-  letter-spacing: -0.3px;
+  line-height: var(--alert-line-height, 1.35);
+  margin-top: var(--alert-text-margin-top, 0px);
+  margin-bottom: var(--alert-text-margin-bottom, 10px);
+  margin-left: var(--alert-text-margin-left, 0px);
+  margin-right: var(--alert-text-margin-right, 0px);
+  letter-spacing: var(--alert-letter-spacing, 0px);
   text-shadow: var(--alert-text-shadow, none);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--alert-word-gap, 6px);
 }
 
 .donator-name {
   color: var(--alert-name-color);
   font-weight: 800;
   display: inline;
+  letter-spacing: var(--alert-letter-spacing, 0px);
   text-shadow: var(--alert-text-shadow, none);
 }
 
@@ -298,6 +302,7 @@ body.overlay-body {
   color: var(--alert-action-color);
   font-weight: 600;
   display: inline;
+  letter-spacing: var(--alert-letter-spacing, 0px);
   text-shadow: var(--alert-text-shadow, none);
 }
 
@@ -316,7 +321,7 @@ body.overlay-body {
   padding: var(--alert-amount-padding, 2px 14px);
   border-radius: 0;
   box-shadow: none;
-  letter-spacing: -0.3px;
+  letter-spacing: var(--alert-letter-spacing, 0px);
   transition: all 0.3s ease;
   text-shadow: none;
   vertical-align: middle;
@@ -343,6 +348,7 @@ body.overlay-body {
   border: var(--alert-msg-border-width, 1px) solid var(--alert-msg-border);
   word-break: break-word;
   line-height: 1.5;
+  letter-spacing: var(--alert-letter-spacing, 0px);
   transition: all 0.3s ease;
   text-shadow: var(--alert-text-shadow, none);
 }

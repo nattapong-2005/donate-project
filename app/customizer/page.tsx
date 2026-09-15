@@ -362,6 +362,13 @@ export default function CustomizerPage() {
     alert_msg_color: '#334155',
     alert_msg_border: '#e2e8f0',
     alert_msg_size: 18,
+    alert_letter_spacing: 0,
+    alert_word_gap: 8,
+    alert_text_margin_top: 0,
+    alert_text_margin_bottom: 10,
+    alert_text_margin_left: 0,
+    alert_text_margin_right: 0,
+    alert_line_height: 1.35,
     alert_animation: 'slide-down',
     alert_duration: 8
   });
@@ -1277,7 +1284,10 @@ export default function CustomizerPage() {
               </div>
 
               <div className="form-group" style={{ marginTop: '14px' }}>
-                <label className="form-label">ขนาดตัวอักษรชื่อ ({settings.alert_title_size || 26}px)</label>
+                <label className="form-label">
+                  <span>ขนาดตัวอักษรชื่อ (Title Size)</span>
+                  <span className="label-val">{settings.alert_title_size || 26}px</span>
+                </label>
                 <input
                   type="range"
                   min="20"
@@ -1285,6 +1295,139 @@ export default function CustomizerPage() {
                   value={settings.alert_title_size || 26}
                   onChange={(e) => updateField('alert_title_size', parseInt(e.target.value))}
                 />
+              </div>
+
+              {/* Spacing Controls (บน ล่าง ซ้าย ขวา & ช่องไฟ) */}
+              <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <label className="form-label" style={{ fontWeight: 700, fontSize: '13.5px', marginBottom: 0 }}>
+                    📐 ระยะห่างตัวอักษรและข้อความ (Text Spacing)
+                  </label>
+                  <button
+                    type="button"
+                    className="btn-text-action"
+                    onClick={() => {
+                      updateField('alert_text_margin_top', 0);
+                      updateField('alert_text_margin_bottom', 10);
+                      updateField('alert_text_margin_left', 0);
+                      updateField('alert_text_margin_right', 0);
+                      updateField('alert_letter_spacing', 0);
+                      updateField('alert_word_gap', 8);
+                    }}
+                  >
+                    รีเซ็ตระยะห่าง
+                  </button>
+                </div>
+
+                {/* 4-way Spacing Grid (บน, ล่าง, ซ้าย, ขวา) */}
+                <div style={{
+                  background: 'var(--bg-main, #f8fafc)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md, 12px)',
+                  padding: '14px',
+                  marginBottom: '14px'
+                }}>
+                  <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '10px' }}>
+                    ระยะห่างขอบข้อความ (Margins: บน - ล่าง - ซ้าย - ขวา)
+                  </div>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span>⬆️ บน (Top)</span>
+                        <span className="label-val">{settings.alert_text_margin_top ?? 0}px</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="60"
+                        value={settings.alert_text_margin_top ?? 0}
+                        onChange={(e) => updateField('alert_text_margin_top', parseInt(e.target.value))}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span>⬇️ ล่าง (Bottom)</span>
+                        <span className="label-val">{settings.alert_text_margin_bottom ?? 10}px</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="60"
+                        value={settings.alert_text_margin_bottom ?? 10}
+                        onChange={(e) => updateField('alert_text_margin_bottom', parseInt(e.target.value))}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span>⬅️ ซ้าย (Left)</span>
+                        <span className="label-val">{settings.alert_text_margin_left ?? 0}px</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="60"
+                        value={settings.alert_text_margin_left ?? 0}
+                        onChange={(e) => updateField('alert_text_margin_left', parseInt(e.target.value))}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">
+                        <span>➡️ ขวา (Right)</span>
+                        <span className="label-val">{settings.alert_text_margin_right ?? 0}px</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="60"
+                        value={settings.alert_text_margin_right ?? 0}
+                        onChange={(e) => updateField('alert_text_margin_right', parseInt(e.target.value))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Letter Spacing & Word Gap */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span>ช่องไฟตัวอักษร (Letter Spacing)</span>
+                      <span className="label-val">{settings.alert_letter_spacing ?? 0}px</span>
+                    </label>
+                    <input
+                      type="range"
+                      min="-2"
+                      max="16"
+                      step="1"
+                      value={settings.alert_letter_spacing ?? 0}
+                      onChange={(e) => updateField('alert_letter_spacing', parseInt(e.target.value))}
+                    />
+                    <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px' }}>
+                      ระยะห่างแนวนอนระหว่างตัวอักษรแต่ละตัว
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">
+                      <span>ระยะห่างระหว่างคำ (Word Gap)</span>
+                      <span className="label-val">{settings.alert_word_gap ?? 8}px</span>
+                    </label>
+                    <input
+                      type="range"
+                      min="2"
+                      max="32"
+                      step="1"
+                      value={settings.alert_word_gap ?? 8}
+                      onChange={(e) => updateField('alert_word_gap', parseInt(e.target.value))}
+                    />
+                    <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px' }}>
+                      ระยะห่างระหว่าง [ชื่อ] ↔ [ข้อความ] ↔ [ยอดเงิน]
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1652,12 +1795,37 @@ export default function CustomizerPage() {
 
                   <div
                     className="alert-title alert-headline"
-                    style={{ fontSize: `${settings.alert_title_size || 26}px` }}
+                    style={{
+                      fontSize: `${settings.alert_title_size || 26}px`,
+                      marginTop: `${settings.alert_text_margin_top ?? 0}px`,
+                      marginBottom: `${settings.alert_text_margin_bottom ?? 10}px`,
+                      marginLeft: `${settings.alert_text_margin_left ?? 0}px`,
+                      marginRight: `${settings.alert_text_margin_right ?? 0}px`,
+                      letterSpacing: `${settings.alert_letter_spacing ?? 0}px`,
+                      gap: `${settings.alert_word_gap ?? 8}px`,
+                      lineHeight: settings.alert_line_height ? Number(settings.alert_line_height) : 1.35,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexWrap: 'wrap'
+                    }}
                   >
-                    <span className="donator-name" style={{ color: settings.alert_name_color || '#0f172a' }}>
+                    <span
+                      className="donator-name"
+                      style={{
+                        color: settings.alert_name_color || '#0f172a',
+                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`
+                      }}
+                    >
                       {(testName || '').trim() || 'Anonymous'}
                     </span>
-                    <span className="alert-action-text" style={{ color: settings.alert_action_color || '#64748b' }}>
+                    <span
+                      className="alert-action-text"
+                      style={{
+                        color: settings.alert_action_color || '#64748b',
+                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`
+                      }}
+                    >
                       {settings.alert_action_text || 'โดเนทให้'}
                     </span>
                     <span
@@ -1668,7 +1836,8 @@ export default function CustomizerPage() {
                         border: settings.alert_amount_bg === 'transparent' ? 'none' : `1.5px solid ${settings.alert_amount_border || '#a7f3d0'}`,
                         fontSize: `${settings.alert_amount_size || 22}px`,
                         boxShadow: 'none',
-                        padding: settings.alert_amount_bg === 'transparent' ? '0' : '2px 14px'
+                        padding: settings.alert_amount_bg === 'transparent' ? '0' : '2px 14px',
+                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`
                       }}
                     >
                       <span className="alert-amount-val">
@@ -1686,7 +1855,8 @@ export default function CustomizerPage() {
                         color: settings.alert_msg_color || '#334155',
                         fontSize: `${settings.alert_msg_size || 18}px`,
                         border: settings.alert_msg_bg === 'transparent' ? 'none' : `1px solid ${settings.alert_msg_border || '#e2e8f0'}`,
-                        padding: settings.alert_msg_bg === 'transparent' ? '4px 0' : '12px 18px'
+                        padding: settings.alert_msg_bg === 'transparent' ? '4px 0' : '12px 18px',
+                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`
                       }}
                     >
                       {testMessage}
