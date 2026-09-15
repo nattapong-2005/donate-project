@@ -467,14 +467,10 @@ body {
   color: var(--alert-msg-color);
   border: var(--alert-msg-border-width) solid var(--alert-msg-border);
   border-radius: 14px;
-  padding: 12px 18px; /* ขอบด้านใน: [บน-ล่าง] [ซ้าย-ขวา] */
-  margin-top: 8px;    /* <-- [บน] ระยะห่างด้านบนของคำว่า สวัสดีครับ (ห่างจากชื่อและยอดเงิน) */
-  margin-bottom: 0px; /* <-- [ล่าง] ระยะห่างด้านล่าง */
-  margin-left: 0px;   /* <-- [ซ้าย] ระยะห่างด้านซ้าย */
-  margin-right: 0px;  /* <-- [ขวา] ระยะห่างด้านขวา */
-  letter-spacing: var(--alert-letter-spacing, 0px); /* <-- ช่องไฟตัวอักษรของข้อความ (ซ้าย-ขวา) */
+  padding: 12px 18px;
+  margin-top: -10px; /* ดึงคำว่า สวัสดีครับ ขึ้นมาติดชิดกับบรรทัดบนทันที */
   font-size: var(--alert-msg-size);
-  line-height: 1.55;  /* <-- ความสูงบรรทัด */
+  line-height: 1.55;
   font-weight: 400;
   word-break: break-word;
   white-space: pre-wrap;

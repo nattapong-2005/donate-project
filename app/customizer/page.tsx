@@ -365,7 +365,7 @@ export default function CustomizerPage() {
     alert_letter_spacing: 0,
     alert_word_gap: 8,
     alert_text_margin_top: 0,
-    alert_text_margin_bottom: 10,
+    alert_text_margin_bottom: 0,
     alert_text_margin_left: 0,
     alert_text_margin_right: 0,
     alert_line_height: 1.35,
@@ -1856,7 +1856,8 @@ export default function CustomizerPage() {
                         fontSize: `${settings.alert_msg_size || 18}px`,
                         border: settings.alert_msg_bg === 'transparent' ? 'none' : `1px solid ${settings.alert_msg_border || '#e2e8f0'}`,
                         padding: settings.alert_msg_bg === 'transparent' ? '4px 0' : '12px 18px',
-                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`
+                        letterSpacing: `${settings.alert_letter_spacing ?? 0}px`,
+                        marginTop: '-10px'
                       }}
                     >
                       {testMessage}
