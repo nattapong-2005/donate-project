@@ -6,5 +6,6 @@ uploads/
 .next/
 *.tsbuildinfo
 supabase.txt
+dev.txt
 data/
 *.log
