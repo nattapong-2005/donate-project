@@ -11,10 +11,14 @@ export default function AdminDonationsPage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'verified' | 'pending'>('all');
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
   const fetchDonations = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/admin/donations?limit=100', {
+      const res = await fetch('/api/admin/donations?limit=500', {
         headers: { 'Content-Type': 'application/json' }
       });
       if (res.status === 401) {
@@ -64,6 +68,22 @@ export default function AdminDonationsPage() {
     }
   };
 
+  // Reset to page 1 on search or filter change
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+  };
+
+  const handleFilterChange = (status: 'all' | 'verified' | 'pending') => {
+    setFilterStatus(status);
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setCurrentPage(1);
+  };
+
   const filteredDonations = useMemo(() => {
     return donations.filter((item) => {
       const matchSearch =
@@ -86,6 +106,44 @@ export default function AdminDonationsPage() {
     return filteredDonations.reduce((sum, item) => sum + (parseFloat(String(item.amount)) || 0), 0);
   }, [filteredDonations]);
 
+  // Pagination calculations
+  const totalPages = Math.max(1, Math.ceil(filteredDonations.length / pageSize));
+  const validCurrentPage = Math.min(currentPage, totalPages);
+
+  const paginatedDonations = useMemo(() => {
+    const start = (validCurrentPage - 1) * pageSize;
+    return filteredDonations.slice(start, start + pageSize);
+  }, [filteredDonations, validCurrentPage, pageSize]);
+
+  const startIndex = filteredDonations.length === 0 ? 0 : (validCurrentPage - 1) * pageSize + 1;
+  const endIndex = Math.min(validCurrentPage * pageSize, filteredDonations.length);
+
+  // Generate page numbers range (e.g., [1, 2, 3, '...', 10])
+  const pageNumbers = useMemo(() => {
+    const pages: (number | string)[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (validCurrentPage > 3) {
+        pages.push('...');
+      }
+
+      const start = Math.max(2, validCurrentPage - 1);
+      const end = Math.min(totalPages - 1, validCurrentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (validCurrentPage < totalPages - 2) {
+        pages.push('...');
+      }
+      pages.push(totalPages);
+    }
+    return pages;
+  }, [totalPages, validCurrentPage]);
+
   return (
     <div className="panel">
       <div className="panel-header" style={{ flexWrap: 'wrap', gap: '12px' }}>
@@ -100,7 +158,7 @@ export default function AdminDonationsPage() {
             ประวัติรายการโดเนททั้งหมด
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '13px', margin: '4px 0 0' }}>
-            แสดงผล {filteredDonations.length} จากทั้งหมด {donations.length} รายการ (ยอดรวม: ฿{totalFilteredAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 })})
+            พบ {filteredDonations.length} จากทั้งหมด {donations.length} รายการ (ยอดรวม: ฿{totalFilteredAmount.toLocaleString('th-TH', { minimumFractionDigits: 2 })})
           </p>
         </div>
 
@@ -124,28 +182,28 @@ export default function AdminDonationsPage() {
             className="input-control"
             placeholder="ค้นหาชื่อ, ข้อความ หรือ Ref สลิป..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
         <div style={{ display: 'flex', gap: '6px' }}>
           <button
             type="button"
             className={`btn sm ${filterStatus === 'all' ? 'primary' : 'secondary'}`}
-            onClick={() => setFilterStatus('all')}
+            onClick={() => handleFilterChange('all')}
           >
             ทั้งหมด
           </button>
           <button
             type="button"
             className={`btn sm ${filterStatus === 'verified' ? 'primary' : 'secondary'}`}
-            onClick={() => setFilterStatus('verified')}
+            onClick={() => handleFilterChange('verified')}
           >
             Verified
           </button>
           <button
             type="button"
             className={`btn sm ${filterStatus === 'pending' ? 'primary' : 'secondary'}`}
-            onClick={() => setFilterStatus('pending')}
+            onClick={() => handleFilterChange('pending')}
           >
             รอตรวจสอบ
           </button>
@@ -173,14 +231,14 @@ export default function AdminDonationsPage() {
                   กำลังโหลดข้อมูล...
                 </td>
               </tr>
-            ) : filteredDonations.length === 0 ? (
+            ) : paginatedDonations.length === 0 ? (
               <tr>
                 <td colSpan={7} style={{ textAlign: 'center', color: 'var(--text-dim)', padding: '36px' }}>
                   {searchQuery || filterStatus !== 'all' ? 'ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา' : 'ยังไม่มีรายการโดเนท'}
                 </td>
               </tr>
             ) : (
-              filteredDonations.map((item) => (
+              paginatedDonations.map((item) => (
                 <tr key={item.id}>
                   <td style={{ whiteSpace: 'nowrap', fontSize: '12px', color: 'var(--text-muted)' }}>
                     {item.created_at ? new Date(item.created_at).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }) : '-'}
@@ -216,6 +274,116 @@ export default function AdminDonationsPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      {filteredDonations.length > 0 && (
+        <div className="pagination-wrapper">
+          <div className="pagination-left">
+            <div className="pagination-size-wrapper">
+              <span>แสดง</span>
+              <select
+                className="pagination-size-select"
+                value={pageSize}
+                onChange={(e) => handlePageSizeChange(parseInt(e.target.value))}
+                aria-label="จำนวนรายการต่อหน้า"
+              >
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+              <span>รายการ / หน้า</span>
+            </div>
+
+            <div className="pagination-info">
+              แสดง <strong>{startIndex} - {endIndex}</strong> จาก <strong>{filteredDonations.length}</strong> รายการ (หน้า <strong>{validCurrentPage}</strong>/{totalPages})
+            </div>
+          </div>
+
+          <div className="pagination-controls">
+            {/* First Page Button */}
+            <button
+              type="button"
+              className="pagination-btn"
+              onClick={() => setCurrentPage(1)}
+              disabled={validCurrentPage <= 1}
+              title="หน้าแรก"
+              aria-label="หน้าแรก"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="11 17 6 12 11 7"></polyline>
+                <polyline points="18 17 13 12 18 7"></polyline>
+              </svg>
+            </button>
+
+            {/* Previous Page Button */}
+            <button
+              type="button"
+              className="pagination-btn"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={validCurrentPage <= 1}
+              title="หน้าก่อนหน้า"
+              aria-label="หน้าก่อนหน้า"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+
+            {/* Numbered Page Buttons */}
+            {pageNumbers.map((p, idx) => {
+              if (p === '...') {
+                return (
+                  <span key={`ellipsis-${idx}`} className="pagination-ellipsis">
+                    …
+                  </span>
+                );
+              }
+              const pageNum = p as number;
+              return (
+                <button
+                  key={pageNum}
+                  type="button"
+                  className={`pagination-btn ${validCurrentPage === pageNum ? 'active' : ''}`}
+                  onClick={() => setCurrentPage(pageNum)}
+                  aria-current={validCurrentPage === pageNum ? 'page' : undefined}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            {/* Next Page Button */}
+            <button
+              type="button"
+              className="pagination-btn"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={validCurrentPage >= totalPages}
+              title="หน้าถัดไป"
+              aria-label="หน้าถัดไป"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+
+            {/* Last Page Button */}
+            <button
+              type="button"
+              className="pagination-btn"
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={validCurrentPage >= totalPages}
+              title="หน้าสุดท้าย"
+              aria-label="หน้าสุดท้าย"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="13 17 18 12 13 7"></polyline>
+                <polyline points="6 17 11 12 6 7"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

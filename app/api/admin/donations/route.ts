@@ -14,9 +14,9 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    const { data: donations, error } = await supabaseAdmin
+    const { data: donations, error, count } = await supabaseAdmin
       .from('donations')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
       .order('id', { ascending: false })
       .range(offset, offset + limit - 1);
@@ -25,7 +25,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
-      donations: donations || []
+      donations: donations || [],
+      total: count ?? (donations ? donations.length : 0)
     });
   } catch (err: any) {
     console.error('Error fetching donations:', err);

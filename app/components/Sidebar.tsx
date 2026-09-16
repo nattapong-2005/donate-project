@@ -49,7 +49,9 @@ export default function Sidebar({
   const isAnalyticsActive = pathname?.startsWith('/admin/analytics') || activeTab === 'tabAnalytics';
   const isDonationsActive = pathname?.startsWith('/admin/donations') || activeTab === 'tabDonations';
   const isSettingsActive = pathname?.startsWith('/admin/settings') || activeTab === 'tabSettings';
+  const isWidgetsActive = pathname?.startsWith('/admin/widgets') || activeTab === 'tabWidgets';
   const isBlacklistActive = pathname?.startsWith('/admin/blacklist') || activeTab === 'tabBlacklist';
+  const isProfileActive = pathname?.startsWith('/admin/profile') || activeTab === 'tabProfile';
   const isCustomizerActive = pathname?.startsWith('/customizer') || activeTab === 'tabCustomizer';
 
   return (
@@ -157,8 +159,8 @@ export default function Sidebar({
               <li>
                 <Link
                   href="/admin/widgets"
-                  className={`sidebar-link ${pathname?.startsWith('/admin/widgets') ? 'active' : ''}`}
-                  onClick={() => handleLinkClick()}
+                  className={`sidebar-link ${isWidgetsActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabWidgets')}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
@@ -180,6 +182,19 @@ export default function Sidebar({
                   </svg>
                   <span>กรองคำหยาบ</span>
                   {blacklistCount > 0 && <span className="sidebar-badge">{blacklistCount}</span>}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/profile"
+                  className={`sidebar-link ${isProfileActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabProfile')}
+                >
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <span>จัดการโปรไฟล์</span>
                 </Link>
               </li>
             </ul>
@@ -213,13 +228,13 @@ export default function Sidebar({
                 </Link>
               </li>
               <li>
-                <Link href="/donate" target="_blank" className="sidebar-link" onClick={onClose}>
+                <Link href="/" target="_blank" className="sidebar-link" onClick={onClose}>
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                     <polyline points="15 3 21 3 21 9"></polyline>
                     <line x1="10" y1="14" x2="21" y2="3"></line>
                   </svg>
-                  <span>หน้าบริจาค Donate</span>
+                  <span>หน้าบริจาค Donate (/)</span>
                 </Link>
               </li>
             </ul>
@@ -228,7 +243,13 @@ export default function Sidebar({
 
         <div className="sidebar-footer">
           {currentUser && (
-            <div className="sidebar-user-card">
+            <Link
+              href="/admin/profile"
+              className={`sidebar-user-card ${isProfileActive ? 'active' : ''}`}
+              onClick={() => onClose()}
+              title="คลิกเพื่อจัดการโปรไฟล์"
+              style={{ textDecoration: 'none', cursor: 'pointer' }}
+            >
               <div className="sidebar-user-avatar">
                 {(currentUser.displayName || currentUser.username || 'A')[0].toUpperCase()}
               </div>
@@ -236,7 +257,10 @@ export default function Sidebar({
                 <div className="sidebar-user-name">{currentUser.displayName || currentUser.username}</div>
                 <div className="sidebar-user-role">ผู้ดูแลระบบ (Admin)</div>
               </div>
-            </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.45, flexShrink: 0 }}>
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </Link>
           )}
 
           <div className="sidebar-footer-actions">
