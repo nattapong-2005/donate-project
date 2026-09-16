@@ -28,9 +28,8 @@ export default function SessionWatcher({ checkIntervalMs = 1000 }: SessionWatche
   useEffect(() => {
     let timerId: NodeJS.Timeout | null = null;
     let intervalId: NodeJS.Timeout | null = null;
-    let heartbeatId: NodeJS.Timeout | null = null;
 
-    const checkSession = async () => {
+    const checkSessionOnce = async () => {
       try {
         const res = await fetch('/api/auth/me', { cache: 'no-store' });
         if (res.status === 401 || !res.ok) {
@@ -46,7 +45,6 @@ export default function SessionWatcher({ checkIntervalMs = 1000 }: SessionWatche
 
         const expiresAt = Number(data.expiresAt || data.user?.expiresAt);
         if (!expiresAt) {
-          // If no expiration timestamp is provided but authenticated is true, do not kick out
           return;
         }
         expiresAtRef.current = expiresAt;
@@ -64,12 +62,14 @@ export default function SessionWatcher({ checkIntervalMs = 1000 }: SessionWatche
           kickOut();
         }, remainingSec * 1000);
       } catch (err) {
-        // Allow next interval to retry if transient network error
+        // Network error on initial check, rely on local interval if expiresAt was already known
       }
     };
 
-    checkSession();
+    // Check once on mount / route change to obtain token expiration
+    checkSessionOnce();
 
+    // Check locally against timestamp without network requests
     intervalId = setInterval(() => {
       if (expiresAtRef.current) {
         const nowSec = Math.floor(Date.now() / 1000);
@@ -79,14 +79,21 @@ export default function SessionWatcher({ checkIntervalMs = 1000 }: SessionWatche
       }
     }, checkIntervalMs);
 
-    heartbeatId = setInterval(() => {
-      checkSession();
-    }, 8000);
+    // If user returns to tab after computer sleep / idle, check local timestamp immediately
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && expiresAtRef.current) {
+        const nowSec = Math.floor(Date.now() / 1000);
+        if (nowSec >= expiresAtRef.current) {
+          kickOut();
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
       if (timerId) clearTimeout(timerId);
       if (intervalId) clearInterval(intervalId);
-      if (heartbeatId) clearInterval(heartbeatId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [pathname]);
 

@@ -88,7 +88,7 @@ export default function WidgetsAdmin() {
       </form>
       {sourceLinks([['หลอดเป้าหมาย', '/overlay/goal']])}
       <p>ตั้งความกว้างตามที่บันทึก ({savedGoal.goal_width} px) และเพิ่มความสูงให้พอดีกับชื่อเป้าหมาย</p>
-      <h2>พรีวิวเป้าหมายที่บันทึกแล้ว</h2><iframe key={previewVersion.goal} title="พรีวิวเป้าหมายที่บันทึกแล้ว" src="/overlay/goal" className="widget-preview" style={{ maxWidth: `${Number(savedGoal.goal_width) + 20}px`, height: `${Number(savedGoal.goal_padding) * 2 + Number(savedGoal.goal_title_size) * 3 + Number(savedGoal.goal_amount_size) * 2 + Number(savedGoal.goal_bar_height) + 100}px` }} />
+      <h2>พรีวิวเป้าหมายที่บันทึกแล้ว</h2>{section === 'goal' && <iframe key={previewVersion.goal} title="พรีวิวเป้าหมายที่บันทึกแล้ว" src="/overlay/goal" className="widget-preview" style={{ maxWidth: `${Number(savedGoal.goal_width) + 20}px`, height: `${Number(savedGoal.goal_padding) * 2 + Number(savedGoal.goal_title_size) * 3 + Number(savedGoal.goal_amount_size) * 2 + Number(savedGoal.goal_bar_height) + 100}px` }} />}
     </section>
     <section id="supporters-panel" role="tabpanel" aria-labelledby="supporters-tab" hidden={section !== 'supporters'}>
       <form onSubmit={event => void save(event, 'supporters')} className="widget-settings">
@@ -99,7 +99,7 @@ export default function WidgetsAdmin() {
       </form>
       {sourceLinks([['โหมดที่ตั้งค่าไว้', '/overlay/supporters'], ['ผู้สนับสนุนล่าสุด', '/overlay/supporters?mode=recent'], ['อันดับวันนี้', '/overlay/supporters?mode=daily'], ['อันดับเดือนนี้', '/overlay/supporters?mode=monthly'], ['อันดับตลอดเวลา', '/overlay/supporters?mode=allTime']])}
       <p>ตั้งความกว้าง {savedSupporters.supporter_width} px และความสูงประมาณ {Math.ceil(supporterHeight)} px รายชื่อยาวอาจต้องเพิ่มความสูง ลิงก์ระบุโหมดจะใช้โหมดนั้นพร้อมรูปแบบอันดับที่บันทึกไว้</p>
-      <h2>พรีวิวอันดับที่บันทึกแล้ว</h2><iframe key={previewVersion.supporters} title="พรีวิวอันดับที่บันทึกแล้ว" src="/overlay/supporters" className="widget-preview" style={{ maxWidth: `${Number(savedSupporters.supporter_width) + 20}px`, height: `${supporterHeight}px` }} />
+      <h2>พรีวิวอันดับที่บันทึกแล้ว</h2>{section === 'supporters' && <iframe key={previewVersion.supporters} title="พรีวิวอันดับที่บันทึกแล้ว" src="/overlay/supporters" className="widget-preview" style={{ maxWidth: `${Number(savedSupporters.supporter_width) + 20}px`, height: `${supporterHeight}px` }} />}
     </section>
   </div>;
 }

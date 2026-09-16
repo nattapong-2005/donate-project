@@ -17,7 +17,7 @@ const QUICK_MESSAGES = [
 
 export default function DonatePage() {
   const [name, setName] = useState<string>('');
-  const [amount, setAmount] = useState<string>('50');
+  const [amount, setAmount] = useState<string>('5');
   const [message, setMessage] = useState<string>('');
 
   // Step: 1 = Form, 2 = QR & Slip, 3 = Success
@@ -454,22 +454,6 @@ export default function DonatePage() {
             </button>
           </div>
         )}
-
-        {/* Footer Navigation */}
-        <div className="footer-nav">
-          <Link href="/overlay" target="_blank" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2"></rect>
-              <line x1="8" y1="21" x2="16" y2="21"></line>
-              <line x1="12" y1="17" x2="12" y2="21"></line>
-            </svg>
-            หน้าจอ OBS Overlay
-          </Link>
-          •
-          <Link href="/admin">
-            เข้าสู่ระบบ Admin
-          </Link>
-        </div>
       </div>
     </div>
   );

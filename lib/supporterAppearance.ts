@@ -5,10 +5,10 @@ export type SupporterMode = keyof typeof supporterModes;
 export const supporterDefaults = {
   supporter_mode: 'daily', supporter_title: '', supporter_font: 'LINESeedSansTH', supporter_layout: 'list',
   supporter_bg_color: '#0f172a', supporter_text_color: '#ffffff', supporter_amount_color: '#67e8f9',
-  supporter_border_color: '#64748b', supporter_row_color: '#1e293b', supporter_rank_color: '#fbbf24',
+  supporter_border_color: '#64748b', supporter_row_color: '#1e293b', supporter_rank_color: '#fbbf24', supporter_rank_bg_color: '#334155',
   supporter_opacity: '90', supporter_width: '600', supporter_padding: '24', supporter_radius: '20',
   supporter_title_size: '24', supporter_name_size: '20', supporter_amount_size: '20', supporter_row_gap: '8', supporter_limit: '5',
-  supporter_show_border: 'true', supporter_show_title: 'true', supporter_show_amount: 'true', supporter_show_rank: 'true',
+  supporter_show_bg: 'true', supporter_show_border: 'true', supporter_show_title: 'true', supporter_show_amount: 'true', supporter_show_rank: 'true', supporter_show_rank_bg: 'true',
 };
 export type SupporterAppearance = typeof supporterDefaults;
 export const supporterRanges: Partial<Record<keyof SupporterAppearance, [number, number]>> = {

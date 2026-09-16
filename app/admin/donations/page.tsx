@@ -183,7 +183,7 @@ export default function AdminDonationsPage() {
               filteredDonations.map((item) => (
                 <tr key={item.id}>
                   <td style={{ whiteSpace: 'nowrap', fontSize: '12px', color: 'var(--text-muted)' }}>
-                    {item.created_at ? new Date(item.created_at).toLocaleString('th-TH') : '-'}
+                    {item.created_at ? new Date(item.created_at).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }) : '-'}
                   </td>
                   <td style={{ fontWeight: 600 }}>{item.name || 'ไม่ระบุชื่อ'}</td>
                   <td style={{ fontWeight: 700, color: 'var(--success)' }}>

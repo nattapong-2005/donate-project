@@ -17,6 +17,7 @@ export async function GET(request: Request) {
     const { data: donations, error } = await supabaseAdmin
       .from('donations')
       .select('*')
+      .order('created_at', { ascending: false })
       .order('id', { ascending: false })
       .range(offset, offset + limit - 1);
 

@@ -30,9 +30,9 @@ export function useWidgets() {
     const channel = supabase.channel('donation-alerts')
       .on('broadcast', { event: 'donation' }, ({ payload }) => { if (!payload?.isTest && !payload?.isReplay) void refresh(); })
       .on('broadcast', { event: 'settings_updated' }, () => void refresh())
-      .subscribe(status => { if (status === 'SUBSCRIBED') void refresh(); });
+      .subscribe();
     void refresh();
-    const timer = window.setInterval(() => void refresh(), 30000);
+    const timer = window.setInterval(() => void refresh(), 60000);
     return () => { disposed = true; controller.abort(); clearInterval(timer); void supabase.removeChannel(channel); document.body.classList.remove('widget-overlay-body'); };
   }, []);
   return data;
