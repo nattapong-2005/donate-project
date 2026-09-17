@@ -451,6 +451,52 @@ textarea.input-control {
   letter-spacing: -0.5px;
 }
 
+/* QR Quick Actions: Download & Copy */
+.qr-action-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-width: 320px;
+  margin: 0 auto 16px;
+}
+
+.qr-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  background: var(--bg-subtle);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  min-height: 42px;
+}
+
+.qr-action-btn:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  transform: translateY(-1px);
+}
+
+.qr-action-btn:active {
+  transform: translateY(0);
+}
+
+.qr-action-btn.success {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #059669;
+}
+
 .qr-instructions {
   text-align: center;
   font-size: 13px;
@@ -769,5 +815,52 @@ textarea.input-control {
 
 .modal-alert-btn:active {
   transform: translateY(0);
+}
+
+/* ==========================================================
+   Mobile Responsive Optimizations (<= 480px)
+   ========================================================== */
+@media (max-width: 480px) {
+  body {
+    padding: 20px 12px;
+  }
+
+  .card {
+    padding: 22px 18px;
+    border-radius: var(--radius-lg);
+  }
+
+  /* Prevent iOS Safari Auto-Zoom on focus */
+  .input-control {
+    font-size: 16px;
+  }
+
+  .amount-grid {
+    gap: 8px;
+  }
+
+  .amount-btn {
+    padding: 10px 6px;
+    font-size: 15px;
+  }
+
+  .qr-box {
+    padding: 20px 16px;
+    max-width: 250px;
+  }
+
+  .qr-action-row {
+    max-width: 100%;
+    gap: 8px;
+  }
+
+  .qr-action-btn {
+    padding: 9px 10px;
+    font-size: 12.5px;
+  }
+
+  .dropzone {
+    padding: 24px 16px;
+  }
 }
 
