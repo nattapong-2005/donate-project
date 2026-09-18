@@ -1,0 +1,705 @@
+/* ==========================================================================
+   Timer Admin Dashboard Styles - Clean White Cards Responsive Theme
+   ========================================================================== */
+
+.timer-admin-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 60px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header */
+.timer-admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+}
+
+.timer-admin-title {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.timer-admin-title h1 {
+  margin: 0;
+  font-size: clamp(20px, 3.5vw, 24px);
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.3;
+}
+
+.timer-admin-title p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   1. MAIN CONTROL BOARD CARD (WHITE CARD)
+   ========================================================================== */
+.timer-control-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.timer-live-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 8px 0 24px;
+  width: 100%;
+}
+
+.timer-live-status {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.timer-live-digits {
+  font-size: clamp(36px, 8.5vw, 68px);
+  font-weight: 800;
+  font-family: 'JetBrains Mono', 'Chakra Petch', monospace;
+  color: #0284c7;
+  letter-spacing: clamp(1px, 0.4vw, 2px);
+  line-height: 1.1;
+  text-align: center;
+  word-break: normal;
+  text-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+  user-select: none;
+}
+
+.timer-status-badge {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.status-badge-running {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.status-badge-paused {
+  background: #fef9c3;
+  color: #a16207;
+  border: 1px solid #fde047;
+}
+
+.status-badge-ended {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.timer-actions-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.timer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.08);
+  min-height: 42px;
+  touch-action: manipulation;
+}
+
+.timer-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.timer-btn-primary {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.timer-btn-primary:hover:not(:disabled) {
+  background: #0369a1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+}
+
+.timer-btn-success {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.timer-btn-success:hover:not(:disabled) {
+  background: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+}
+
+.timer-btn-warning {
+  background: #d97706;
+  color: #ffffff;
+}
+
+.timer-btn-warning:hover:not(:disabled) {
+  background: #b45309;
+  transform: translateY(-1px);
+}
+
+.timer-btn-danger {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.timer-btn-danger:hover:not(:disabled) {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.timer-btn-secondary {
+  background: #f8fafc;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+}
+
+.timer-btn-secondary:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+/* ==========================================================================
+   2. QUICK ADJUST CARD (WHITE CARD)
+   ========================================================================== */
+.timer-quick-adjust-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.05);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.timer-quick-adjust-card h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 14px;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-adjust-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.quick-adjust-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+}
+
+.quick-adjust-divider {
+  display: none;
+}
+
+.btn-adjust-add {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  color: #16a34a;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.btn-adjust-add:hover:not(:disabled) {
+  background: #dcfce7;
+  border-color: #4ade80;
+  transform: translateY(-1px);
+}
+
+.btn-adjust-sub {
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  color: #dc2626;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.btn-adjust-sub:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #f87171;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   3. SETTINGS & RULES CARDS (WHITE CARDS)
+   ========================================================================== */
+.timer-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.timer-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.05);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.timer-card h2 {
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.timer-card p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.timer-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.timer-form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1.4;
+}
+
+.timer-form-group input:not([type="checkbox"]):not([type="color"]):not([type="range"]),
+.timer-form-group select {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9px;
+  padding: 10px 14px;
+  color: #0f172a;
+  font-size: 14px;
+  transition: all 0.15s ease;
+  min-height: 42px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.timer-form-group input[type="checkbox"] {
+  width: 20px !important;
+  height: 20px !important;
+  min-height: 20px !important;
+  accent-color: #0284c7;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.timer-form-group input[type="color"] {
+  width: 100%;
+  height: 42px;
+  min-height: 42px;
+  padding: 3px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9px;
+  background: #ffffff;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.timer-form-group input[type="range"] {
+  width: 100%;
+  height: auto;
+  min-height: auto;
+  padding: 8px 0;
+  accent-color: #0284c7;
+  cursor: pointer;
+}
+
+.timer-form-group input:focus,
+.timer-form-group select:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.timer-form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.timer-form-row > .timer-form-group {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.timer-form-row-colors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.timer-form-row-colors > .timer-form-group {
+  min-width: 0;
+  flex: auto;
+}
+
+/* Sub-card (e.g. Add rule box) */
+.timer-subcard {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 8px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.timer-subcard-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #0f172a;
+}
+
+/* Responsive Tier Rules Table */
+.timer-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+.timer-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.timer-table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.timer-table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.tier-rules-table {
+  width: 100%;
+  min-width: 440px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tier-rules-table th {
+  background: #f8fafc;
+  color: #475569;
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 700;
+  border-bottom: 1.5px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.tier-rules-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.tier-badge-add {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.tier-badge-sub {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.btn-rule-delete {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.btn-rule-delete:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Theme selector cards */
+.theme-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+.theme-card {
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.theme-card:hover {
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.theme-card.active {
+  border-color: #0284c7;
+  background: #f0f9ff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
+}
+
+.theme-card-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.theme-card-desc {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* OBS Source Box */
+.timer-source-box {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.timer-source-box input {
+  flex: 1 1 200px;
+  min-width: 0;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: #334155;
+  font-size: 13px;
+  font-family: monospace;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   4. RESPONSIVE BREAKPOINTS (Mobile & Tablet)
+   ========================================================================= */
+
+/* Tablet & Smaller Screens (<= 880px) */
+@media (max-width: 880px) {
+  .timer-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Screens (<= 640px) */
+@media (max-width: 640px) {
+  .timer-admin-container {
+    gap: 18px;
+    padding-bottom: 40px;
+  }
+
+  .timer-admin-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .timer-admin-header .timer-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 20px;
+    font-size: 15px;
+  }
+
+  .timer-control-card {
+    padding: 20px 16px;
+    border-radius: 14px;
+  }
+
+  .timer-card,
+  .timer-quick-adjust-card {
+    padding: 18px 16px;
+    border-radius: 14px;
+  }
+
+  .timer-subcard {
+    padding: 14px 12px;
+    border-radius: 10px;
+  }
+
+  .quick-adjust-divider {
+    display: none;
+  }
+
+  .quick-adjust-group {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+    gap: 8px;
+  }
+
+  .quick-adjust-group button {
+    width: 100%;
+    text-align: center;
+    padding: 10px 6px;
+    font-size: 12.5px;
+  }
+
+  .timer-form-row:not(.timer-form-row-colors) {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .timer-form-row:not(.timer-form-row-colors) > .timer-form-group {
+    width: 100%;
+    flex: auto;
+  }
+}
+
+/* Small Mobile Screens (<= 520px) */
+@media (max-width: 520px) {
+  .timer-actions-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .timer-actions-row .timer-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 20px;
+    font-size: 15px;
+  }
+
+  .timer-source-box {
+    flex-direction: column;
+  }
+
+  .timer-source-box input {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .timer-source-box .timer-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+/* Extra Small Screens (<= 440px) */
+@media (max-width: 440px) {
+  .theme-picker-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timer-form-row-colors {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

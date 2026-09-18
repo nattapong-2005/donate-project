@@ -1,0 +1,314 @@
+/* Subathon Timer Widget CSS */
+
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@400;600;700;800&display=swap');
+
+.timer-overlay-body {
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  overflow: hidden;
+  user-select: none;
+}
+
+.timer-widget-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   THEMES
+   ========================================================================== */
+
+/* 1. Glassmorphism Dark (Default) */
+.timer-theme-glass {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+/* 2. Neon Cyberpunk */
+.timer-theme-neon {
+  background: rgba(10, 10, 20, 0.94);
+  border: 2px solid var(--timer-accent, #38bdf8);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35),
+    inset 0 0 15px rgba(56, 189, 248, 0.15);
+  font-family: 'Chakra Petch', sans-serif !important;
+}
+
+.timer-theme-neon .timer-digits {
+  text-shadow: 0 0 15px var(--timer-accent, #38bdf8);
+}
+
+/* 3. Minimal Clean */
+.timer-theme-minimal {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* 4. Retro Digital Arcade */
+.timer-theme-retro {
+  background: #000000;
+  border: 3px solid #334155;
+  box-shadow: inset 0 0 20px rgba(0, 255, 128, 0.15), 0 12px 30px rgba(0, 0, 0, 0.7);
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.timer-theme-retro .timer-digits {
+  letter-spacing: 4px;
+}
+
+/* ==========================================================================
+   WIDGET ELEMENTS
+   ========================================================================== */
+
+.timer-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.timer-title-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timer-status-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-badge-running {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+}
+
+.status-badge-paused {
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+  border: 1px solid rgba(250, 204, 21, 0.4);
+}
+
+.status-badge-ended {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+}
+
+.timer-digits-wrapper {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  position: relative;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+}
+
+.timer-digits {
+  display: inline-flex;
+  align-items: center;
+}
+
+.timer-digits-separator {
+  opacity: 0.7;
+  padding: 0 3px;
+  font-weight: 600;
+}
+
+.timer-pulse-green {
+  animation: pulseGreen 0.6s ease-out;
+}
+
+.timer-pulse-red {
+  animation: pulseRed 0.6s ease-out;
+}
+
+@keyframes pulseGreen {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px #22c55e);
+  }
+
+  40% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 24px #22c55e);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px #22c55e);
+  }
+}
+
+@keyframes pulseRed {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px #ef4444);
+  }
+
+  40% {
+    transform: scale(0.94);
+    filter: drop-shadow(0 0 24px #ef4444);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px #ef4444);
+  }
+}
+
+/* ==========================================================================
+   FLOATING NOTIFICATION BADGE
+   ========================================================================== */
+
+.timer-floating-badge-container {
+  position: absolute;
+  top: -30px;
+  right: 14px;
+  pointer-events: none;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.timer-floating-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 800;
+  box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.5);
+  animation: floatBadgeUp 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.timer-floating-badge.badge-add {
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  color: #ffffff;
+  border: 1.5px solid #86efac;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.timer-floating-badge.badge-subtract {
+  background: linear-gradient(135deg, #b91c1c, #ef4444);
+  color: #ffffff;
+  border: 1.5px solid #fca5a5;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.badge-donor-name {
+  font-weight: 600;
+  font-size: 13px;
+  opacity: 0.95;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge-time-delta {
+  font-size: 16px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes floatBadgeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.85);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.05);
+  }
+
+  25% {
+    opacity: 1;
+    transform: translateY(-12px) scale(1);
+  }
+
+  75% {
+    opacity: 1;
+    transform: translateY(-26px) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-44px) scale(0.9);
+  }
+}
+
+/* ==========================================================================
+   DONOR ATTRIBUTION FOOTER
+   ========================================================================== */
+
+.timer-footer {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  opacity: 0.85;
+  gap: 6px;
+}
+
+.timer-latest-donor {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 3px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.timer-zero-warning {
+  animation: blinkWarning 1.2s infinite ease-in-out;
+  color: #f87171 !important;
+}
+
+@keyframes blinkWarning {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}

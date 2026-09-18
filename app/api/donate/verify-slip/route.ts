@@ -4,6 +4,7 @@ import { verifySlip } from '@/lib/services/slipok';
 import { filterMessage } from '@/lib/services/blacklist';
 import { Donation } from '@/lib/types/database';
 import { MAX_SLIP_FILE_SIZE_BYTES } from '@/lib/constants';
+import { calculateTimerDelta, computeRemainingSeconds, readTimerConfig } from '@/lib/timerLogic';
 
 export const dynamic = 'force-dynamic';
 
@@ -129,7 +130,50 @@ export async function POST(request: Request) {
       );
     }
 
-    // 6. Broadcast event to Supabase Realtime channel for instant OBS alert
+    // 6. Check and update countdown timer if enabled
+    let timerEvent: any = null;
+    try {
+      const { data: timerRows } = await supabaseAdmin
+        .from('settings')
+        .select('key, value')
+        .ilike('key', 'timer_%');
+
+      if (timerRows && timerRows.length > 0) {
+        const timerSettings: Record<string, string> = {};
+        timerRows.forEach(r => { timerSettings[r.key] = r.value; });
+        const timerConfig = readTimerConfig(timerSettings);
+
+        if (timerConfig.timer_enabled && timerConfig.timer_status !== 'stopped') {
+          const { deltaSeconds, ruleMatched } = calculateTimerDelta(inserted.amount, timerConfig);
+          if (deltaSeconds !== 0) {
+            const currentSec = computeRemainingSeconds(timerConfig);
+            let newSec = Math.max(0, currentSec + deltaSeconds);
+            if (timerConfig.timer_max_cap_seconds > 0 && newSec > timerConfig.timer_max_cap_seconds) {
+              newSec = timerConfig.timer_max_cap_seconds;
+            }
+            const nowIso = new Date().toISOString();
+            await supabaseAdmin.from('settings').upsert([
+              { key: 'timer_remaining_seconds', value: String(newSec) },
+              { key: 'timer_last_updated_at', value: nowIso }
+            ], { onConflict: 'key' });
+
+            timerEvent = {
+              remaining_seconds: newSec,
+              status: timerConfig.timer_status,
+              last_updated_at: nowIso,
+              delta_seconds: deltaSeconds,
+              donor_name: inserted.name,
+              donor_amount: inserted.amount,
+              reason: ruleMatched
+            };
+          }
+        }
+      }
+    } catch (timerErr: any) {
+      console.warn('Timer update on donation error:', timerErr.message);
+    }
+
+    // 7. Broadcast event to Supabase Realtime channel for instant OBS alert
     const channel = supabaseAdmin.channel('donation-alerts');
     try {
       await channel.httpSend('donation', {
@@ -138,6 +182,9 @@ export async function POST(request: Request) {
         amount: inserted.amount,
         message: inserted.message
       });
+      if (timerEvent) {
+        await channel.httpSend('timer_update', timerEvent);
+      }
     } catch (realtimeErr: any) {
       console.warn('Realtime broadcast warning:', realtimeErr.message);
     } finally {

@@ -50,6 +50,7 @@ export default function Sidebar({
   const isDonationsActive = pathname?.startsWith('/admin/donations') || activeTab === 'tabDonations';
   const isSettingsActive = pathname?.startsWith('/admin/settings') || activeTab === 'tabSettings';
   const isWidgetsActive = pathname?.startsWith('/admin/widgets') || activeTab === 'tabWidgets';
+  const isTimerActive = pathname?.startsWith('/admin/timer') || activeTab === 'tabTimer';
   const isBlacklistActive = pathname?.startsWith('/admin/blacklist') || activeTab === 'tabBlacklist';
   const isProfileActive = pathname?.startsWith('/admin/profile') || activeTab === 'tabProfile';
   const isCustomizerActive = pathname?.startsWith('/customizer') || activeTab === 'tabCustomizer';
@@ -169,6 +170,19 @@ export default function Sidebar({
                     <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
                   </svg>
                   <span>วิดเจ็ต OBS & เป้าหมาย</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/timer"
+                  className={`sidebar-link ${isTimerActive ? 'active' : ''}`}
+                  onClick={() => handleLinkClick('tabTimer')}
+                >
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span>ระบบจับเวลา (Timer)</span>
                 </Link>
               </li>
               <li>

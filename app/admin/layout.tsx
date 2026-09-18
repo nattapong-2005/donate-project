@@ -115,6 +115,7 @@ export default function AdminLayout({
     if (pathname?.startsWith('/admin/donations')) return 'ประวัติการโดเนท';
     if (pathname?.startsWith('/admin/settings')) return 'ตั้งค่าระบบ & OBS';
     if (pathname?.startsWith('/admin/widgets')) return 'วิดเจ็ต OBS & เป้าหมาย';
+    if (pathname?.startsWith('/admin/timer')) return 'ระบบจับเวลา & Subathon (Timer)';
     if (pathname?.startsWith('/admin/blacklist')) return 'กรองคำหยาบ (Blacklist)';
     if (pathname?.startsWith('/admin/profile')) return 'จัดการโปรไฟล์ผู้ดูแลระบบ (Profile)';
     return 'Streamer Dashboard';
