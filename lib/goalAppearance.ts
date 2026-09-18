@@ -4,17 +4,18 @@ export const goalFontOptions = [
 ];
 export const goalAppearanceDefaults = {
   goal_show_border: 'true',
-  goal_bar_style: 'glass', goal_bar_animated: 'true',
+  goal_bar_style: 'glass', goal_bar_animated: 'true', goal_bar_shine: 'true',
   goal_font: 'LINESeedSansTH',
   goal_bg_color: '#0f172a', goal_text_color: '#ffffff', goal_accent_color: '#67e8f9',
   goal_bar_color: '#3b82f6', goal_bar_end_color: '#22d3ee', goal_track_color: '#334155',
   goal_border_color: '#64748b', goal_opacity: '90', goal_width: '600', goal_padding: '24',
-  goal_radius: '20', goal_title_size: '24', goal_amount_size: '20', goal_bar_height: '26',
+  goal_radius: '20', goal_bar_radius: '50', goal_title_size: '24', goal_amount_size: '20', goal_bar_height: '26',
   goal_show_percent: 'true', goal_show_amount: 'true', goal_gradient: 'true',
 };
 export type GoalAppearance = typeof goalAppearanceDefaults;
 export const goalAppearanceRanges: Partial<Record<keyof GoalAppearance, [number, number]>> = {
   goal_opacity: [0, 100], goal_width: [240, 1600], goal_padding: [0, 80], goal_radius: [0, 80],
+  goal_bar_radius: [0, 50],
   goal_title_size: [12, 64], goal_amount_size: [12, 64], goal_bar_height: [8, 80],
 };
 export function validGoalAppearance(key: keyof GoalAppearance, value: unknown): boolean {

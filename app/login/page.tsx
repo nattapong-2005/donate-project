@@ -1,14 +1,57 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import '../donate/donate.css';
+import './login.css';
+
+interface FormErrors {
+  username?: string;
+  password?: string;
+}
+
+const validateUsername = (value: string): string => {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return 'กรุณากรอกชื่อผู้ใช้';
+  }
+  if (value.includes(' ')) {
+    return 'ชื่อผู้ใช้ต้องไม่มีการเว้นวรรค';
+  }
+  if (trimmed.length < 3) {
+    return 'ชื่อผู้ใช้ต้องมีความยาวอย่างน้อย 3 ตัวอักษร';
+  }
+  if (trimmed.length > 30) {
+    return 'ชื่อผู้ใช้ต้องมีความยาวไม่เกิน 30 ตัวอักษร';
+  }
+  const validPattern = /^[a-zA-Z0-9_.-]+$/;
+  if (!validPattern.test(trimmed)) {
+    return 'ชื่อผู้ใช้ต้องเป็นตัวอักษรภาษาอังกฤษ ตัวเลข หรือ _ . - เท่านั้น';
+  }
+  return '';
+};
+
+const validatePassword = (value: string): string => {
+  if (!value) {
+    return 'กรุณากรอกรหัสผ่าน';
+  }
+  if (value.length < 4) {
+    return 'รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร';
+  }
+  if (value.length > 100) {
+    return 'รหัสผ่านต้องมีความยาวไม่เกิน 100 ตัวอักษร';
+  }
+  return '';
+};
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/admin';
+
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -16,14 +59,44 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
+  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setUsername(val);
+    if (errorMessage) setErrorMessage('');
+    if (hasSubmitted) {
+      setErrors(prev => ({ ...prev, username: validateUsername(val) }));
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setPassword(val);
+    if (errorMessage) setErrorMessage('');
+    if (hasSubmitted) {
+      setErrors(prev => ({ ...prev, password: validatePassword(val) }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
     setSuccessMessage('');
+    setHasSubmitted(true);
 
-    if (!username.trim() || !password) {
-      setErrorMessage('กรุณากรอกชื่อผู้ใช้และรหัสผ่านให้ครบถ้วน');
+    const userErr = validateUsername(username);
+    const passErr = validatePassword(password);
+
+    setErrors({ username: userErr, password: passErr });
+
+    if (userErr) {
+      usernameRef.current?.focus();
+      return;
+    }
+    if (passErr) {
+      passwordRef.current?.focus();
       return;
     }
 
@@ -63,34 +136,24 @@ function LoginForm() {
   };
 
   return (
-    <div>
+    <div className="login-page-wrapper">
       <div className="bg-mesh" />
 
-      <div className="container" style={{ maxWidth: '420px', margin: '40px auto' }}>
+      <div className="login-container">
         {/* Header Branding */}
-        <div className="header-card" style={{ marginBottom: '24px' }}>
-          <div className="avatar-wrapper" style={{ width: '74px', height: '74px', margin: '0 auto 14px' }}>
-            <div
-              className="avatar-img"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '30px',
-                background: '#eff6ff',
-                borderColor: '#bfdbfe'
-              }}
-            >
+        <div className="login-header">
+          <div className="login-avatar-wrapper">
+            <div className="login-avatar-img">
               🔒
             </div>
-            <div className="live-badge" style={{ background: '#2563eb', boxShadow: '0 2px 8px rgba(37, 99, 235, 0.35)' }}>
+            <div className="login-badge">
               ADMIN
             </div>
           </div>
-          <h1 className="streamer-name" style={{ fontSize: '22px' }}>
+          <h1 className="login-title">
             เข้าสู่ระบบหลังบ้าน
           </h1>
-          <p className="streamer-desc" style={{ fontSize: '13px' }}>
+          <p className="login-desc">
             ระบบจัดการสตรีมเมอร์ &amp; ปรับแต่งแจ้งเตือน OBS Studio
           </p>
         </div>
@@ -110,62 +173,109 @@ function LoginForm() {
         )}
 
         {/* Login Card */}
-        <div className="card" style={{ padding: '28px 24px' }}>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group" style={{ marginBottom: '18px' }}>
-              <label className="form-label" htmlFor="username">
-                <span>ชื่อผู้ใช้ (Username)</span>
-              </label>
+        <div className="login-card">
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="login-form-group">
+              <div className="login-label-row">
+                <label className="login-label" htmlFor="username">
+                  <span>ชื่อผู้ใช้ (Username)</span>
+                </label>
+                {hasSubmitted && !errors.username && username.trim() && (
+                  <span className="login-valid-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    ถูกต้อง
+                  </span>
+                )}
+              </div>
               <div style={{ position: 'relative' }}>
                 <input
+                  ref={usernameRef}
                   type="text"
                   id="username"
-                  className="input-control"
+                  className={`login-input ${hasSubmitted && errors.username ? 'input-error' : ''}`}
                   placeholder="เช่น admin"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={handleUsernameChange}
                   autoComplete="username"
                   autoFocus
-                  required
+                  aria-invalid={Boolean(hasSubmitted && errors.username)}
+                  aria-describedby={hasSubmitted && errors.username ? 'username-error' : undefined}
                 />
               </div>
+              {hasSubmitted && errors.username && (
+                <div
+                  id="username-error"
+                  role="alert"
+                  className="login-error-text"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{errors.username}</span>
+                </div>
+              )}
             </div>
 
-            <div className="form-group" style={{ marginBottom: '22px' }}>
-              <div className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <label htmlFor="password" style={{ cursor: 'pointer' }}>รหัสผ่าน (Password)</label>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--text-dim)',
-                    fontSize: '12px',
-                    cursor: 'pointer',
-                    padding: 0
-                  }}
-                >
-                  {showPassword ? 'ซ่อน' : 'แสดง'}
-                </button>
+            <div className="login-form-group">
+              <div className="login-label-row">
+                <label className="login-label" htmlFor="password">รหัสผ่าน (Password)</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {hasSubmitted && !errors.password && password && (
+                    <span className="login-valid-badge">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      ถูกต้อง
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    className="login-toggle-pw-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน'}
+                  >
+                    {showPassword ? 'ซ่อน' : 'แสดง'}
+                  </button>
+                </div>
               </div>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                className="input-control"
-                placeholder="กรอกรหัสผ่านของคุณ"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  ref={passwordRef}
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  className={`login-input ${hasSubmitted && errors.password ? 'input-error' : ''}`}
+                  placeholder="กรอกรหัสผ่านของคุณ"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  autoComplete="current-password"
+                  aria-invalid={Boolean(hasSubmitted && errors.password)}
+                  aria-describedby={hasSubmitted && errors.password ? 'password-error' : undefined}
+                />
+              </div>
+              {hasSubmitted && errors.password && (
+                <div
+                  id="password-error"
+                  role="alert"
+                  className="login-error-text"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{errors.password}</span>
+                </div>
+              )}
             </div>
 
             <button
               type="submit"
-              className="btn-primary"
+              className="login-btn-submit"
               disabled={isLoading}
-              style={{ width: '100%' }}
             >
               {isLoading ? (
                 <>
@@ -184,34 +294,18 @@ function LoginForm() {
               )}
             </button>
           </form>
-
-          {/* Initial Setup Tip */}
-          <div
-            style={{
-              marginTop: '20px',
-              padding: '12px 14px',
-              borderRadius: '8px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
-              fontSize: '12px',
-              color: 'var(--text-muted)',
-              lineHeight: 1.5
-            }}
-          >
-            💡 <strong>ค่าเริ่มต้นระบบ:</strong> สำหรับการเข้าใช้งานครั้งแรก สามารถเข้าด้วยชื่อผู้ใช้ <code>admin</code> และรหัสผ่านที่ตั้งไว้ใน <code>ADMIN_SECRET</code> ในไฟล์ <code>.env.local</code>
-          </div>
         </div>
 
         {/* Footer Navigation */}
-        <div className="footer-nav" style={{ marginTop: '20px' }}>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+        <div className="login-footer-nav">
+          <Link href="/">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
             กลับไปยังหน้า Donate (/)
           </Link>
-          •
+          <span>•</span>
           <Link href="/overlay" target="_blank">
             หน้าจอ OBS Overlay
           </Link>

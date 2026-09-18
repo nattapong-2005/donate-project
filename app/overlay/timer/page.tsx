@@ -157,6 +157,37 @@ export default function TimerOverlayPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // URL query parameter background override (?bg=0, ?bg=false, ?nobg=1, ?transparent=1)
+  const [urlBgOverride, setUrlBgOverride] = useState<boolean | null>(null);
+  const [urlShadowOverride, setUrlShadowOverride] = useState<boolean | null>(null);
+  const [urlShadowColor, setUrlShadowColor] = useState<string | null>(null);
+  const [urlShadowBlur, setUrlShadowBlur] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('bg')) {
+        const val = params.get('bg');
+        setUrlBgOverride(val !== '0' && val !== 'false' && val !== 'none');
+      } else if (params.has('nobg') || params.has('transparent')) {
+        setUrlBgOverride(false);
+      }
+
+      if (params.has('shadow')) {
+        const s = params.get('shadow');
+        setUrlShadowOverride(s !== '0' && s !== 'false' && s !== 'none');
+      }
+      if (params.has('shadow_color')) {
+        const col = params.get('shadow_color');
+        if (col) setUrlShadowColor(col.startsWith('#') ? col : `#${col}`);
+      }
+      if (params.has('shadow_blur')) {
+        const b = Number(params.get('shadow_blur'));
+        if (!isNaN(b)) setUrlShadowBlur(b);
+      }
+    }
+  }, []);
+
   // Test / preview badge
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -172,6 +203,25 @@ export default function TimerOverlayPage() {
 
   const { formatted, isZero } = formatTimerDisplay(displaySeconds);
 
+  const isBackgroundVisible =
+    urlBgOverride !== null
+      ? urlBgOverride
+      : (appearance.show_background !== undefined ? appearance.show_background : true);
+
+  const isShadowEnabled =
+    urlShadowOverride !== null
+      ? urlShadowOverride
+      : (appearance.show_digits_shadow !== false);
+
+  const shadowX = appearance.digits_shadow_x ?? 0;
+  const shadowY = appearance.digits_shadow_y ?? 2;
+  const shadowBlur = urlShadowBlur !== null ? urlShadowBlur : (appearance.digits_shadow_blur ?? 8);
+  const shadowColor = urlShadowColor || appearance.digits_shadow_color || '#000000';
+
+  const digitsTextShadow = isShadowEnabled
+    ? `${shadowX}px ${shadowY}px ${shadowBlur}px ${shadowColor}`
+    : 'none';
+
   const themeClass = `timer-theme-${appearance.theme || 'glass'}`;
   const opacityHex = Math.round(Number(appearance.opacity || 90) * 2.55)
     .toString(16)
@@ -181,12 +231,17 @@ export default function TimerOverlayPage() {
     fontFamily: `'${appearance.font || 'LINESeedSansTH'}', sans-serif`,
     width: `${appearance.width || 480}px`,
     maxWidth: '96vw',
-    padding: `${appearance.padding || 24}px`,
-    borderRadius: `${appearance.radius || 20}px`,
-    borderColor: appearance.border_color || '#334155',
+    padding: isBackgroundVisible ? `${appearance.padding || 24}px` : `${Math.min(appearance.padding || 16, 20)}px 12px`,
+    borderRadius: isBackgroundVisible ? `${appearance.radius || 20}px` : '0px',
+    borderColor: isBackgroundVisible ? (appearance.border_color || '#334155') : 'transparent',
     color: appearance.text_color || '#ffffff',
-    backgroundColor: `${appearance.bg_color || '#0f172a'}${opacityHex}`,
-    '--timer-accent': appearance.accent_color || '#38bdf8'
+    backgroundColor: isBackgroundVisible ? `${appearance.bg_color || '#0f172a'}${opacityHex}` : 'transparent',
+    boxShadow: isBackgroundVisible ? undefined : 'none',
+    border: isBackgroundVisible ? undefined : 'none',
+    backdropFilter: isBackgroundVisible ? undefined : 'none',
+    WebkitBackdropFilter: isBackgroundVisible ? undefined : 'none',
+    '--timer-accent': appearance.accent_color || '#38bdf8',
+    '--digits-text-shadow': digitsTextShadow
   } as React.CSSProperties;
 
   return (
@@ -202,7 +257,7 @@ export default function TimerOverlayPage() {
         boxSizing: 'border-box'
       }}
     >
-      <div className={`timer-widget-container ${themeClass}`} style={containerStyle}>
+      <div className={`timer-widget-container ${themeClass} ${!isBackgroundVisible ? 'no-background' : ''}`} style={containerStyle}>
         {/* Floating Animation Badges */}
         <div className="timer-floating-badge-container">
           {floatingBadges.map(badge => (
@@ -244,7 +299,7 @@ export default function TimerOverlayPage() {
           className={`timer-digits-wrapper ${pulseClass} ${isZero ? 'timer-zero-warning' : ''}`}
           style={{ fontSize: `${appearance.digits_size || 54}px` }}
         >
-          <span className="timer-digits">{formatted}</span>
+          <span className="timer-digits" style={{ textShadow: digitsTextShadow }}>{formatted}</span>
         </div>
 
         {/* Footer / Latest Donor Attribution */}

@@ -27,6 +27,13 @@ export interface TimerAppearance {
   show_title: boolean;
   show_donor_badge: boolean;
   show_seconds: boolean;
+  show_background: boolean;
+  // เงาของตัวเลขนับเวลา (Digits Text Shadow)
+  show_digits_shadow?: boolean;
+  digits_shadow_color?: string;
+  digits_shadow_blur?: number;
+  digits_shadow_x?: number;
+  digits_shadow_y?: number;
 }
 
 export interface TimerConfig {
@@ -71,6 +78,12 @@ export const defaultTimerAppearance: TimerAppearance = {
   show_title: true,
   show_donor_badge: true,
   show_seconds: true,
+  show_background: true,
+  show_digits_shadow: true,
+  digits_shadow_color: '#000000',
+  digits_shadow_blur: 8,
+  digits_shadow_x: 0,
+  digits_shadow_y: 2,
 };
 
 export const defaultTimerConfig: TimerConfig = {

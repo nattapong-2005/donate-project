@@ -125,7 +125,12 @@ export function readTimerAppearance(settings: Record<string, string>): TimerAppe
   if (settings.timer_appearance) {
     try {
       const parsed = JSON.parse(settings.timer_appearance);
-      return { ...base, ...parsed };
+      return {
+        ...base,
+        ...parsed,
+        show_background: parsed.show_background !== undefined ? Boolean(parsed.show_background) : base.show_background,
+        show_digits_shadow: parsed.show_digits_shadow !== undefined ? Boolean(parsed.show_digits_shadow) : base.show_digits_shadow
+      };
     } catch (e) {
       // fallback to individual keys or defaults
     }
@@ -145,6 +150,22 @@ export function readTimerAppearance(settings: Record<string, string>): TimerAppe
   if (settings.timer_radius) base.radius = Number(settings.timer_radius) || base.radius;
   if (settings.timer_digits_size) base.digits_size = Number(settings.timer_digits_size) || base.digits_size;
   if (settings.timer_title_size) base.title_size = Number(settings.timer_title_size) || base.title_size;
+  if (settings.timer_show_background !== undefined) {
+    base.show_background = settings.timer_show_background === 'true' || settings.timer_show_background === '1';
+  }
+  if (settings.timer_show_title !== undefined) {
+    base.show_title = settings.timer_show_title === 'true' || settings.timer_show_title === '1';
+  }
+  if (settings.timer_show_donor_badge !== undefined) {
+    base.show_donor_badge = settings.timer_show_donor_badge === 'true' || settings.timer_show_donor_badge === '1';
+  }
+  if (settings.timer_show_digits_shadow !== undefined) {
+    base.show_digits_shadow = settings.timer_show_digits_shadow === 'true' || settings.timer_show_digits_shadow === '1';
+  }
+  if (settings.timer_digits_shadow_color) base.digits_shadow_color = settings.timer_digits_shadow_color;
+  if (settings.timer_digits_shadow_blur !== undefined) base.digits_shadow_blur = Number(settings.timer_digits_shadow_blur) || base.digits_shadow_blur;
+  if (settings.timer_digits_shadow_x !== undefined) base.digits_shadow_x = Number(settings.timer_digits_shadow_x) || base.digits_shadow_x;
+  if (settings.timer_digits_shadow_y !== undefined) base.digits_shadow_y = Number(settings.timer_digits_shadow_y) || base.digits_shadow_y;
 
   return base;
 }

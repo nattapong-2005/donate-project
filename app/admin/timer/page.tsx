@@ -309,8 +309,8 @@ export default function TimerAdminPage() {
   };
 
   // Copy OBS link
-  const copyObsLink = async () => {
-    const url = `${origin}/overlay/timer`;
+  const copyObsLink = async (customUrl?: string) => {
+    const url = customUrl || `${origin}/overlay/timer`;
     try {
       await navigator.clipboard.writeText(url);
       showToast('คัดลอกลิงก์ OBS เรียบร้อยแล้ว');
@@ -664,6 +664,74 @@ export default function TimerAdminPage() {
               </div>
             </div>
 
+            {/* Background Style Selector (เอาหรือไม่เอาพื้นหลัง) */}
+            <div className="timer-form-group">
+              <label>การแสดงผลพื้นหลัง (Widget Background)</label>
+              <div className="bg-toggle-grid">
+                <button
+                  type="button"
+                  className={`bg-toggle-btn ${config.timer_appearance.show_background !== false ? 'active' : ''}`}
+                  onClick={() => setConfig(prev => ({
+                    ...prev,
+                    timer_appearance: { ...prev.timer_appearance, show_background: true }
+                  }))}
+                >
+                  <span className="bg-toggle-icon">🖼️</span>
+                  <div>
+                    <div className="bg-toggle-title">มีพื้นหลังกล่อง (Card)</div>
+                    <div className="bg-toggle-desc">แสดงสไตล์การ์ด มีสีพื้นหลัง กรอบ และเงาตามธีม</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  className={`bg-toggle-btn ${config.timer_appearance.show_background === false ? 'active' : ''}`}
+                  onClick={() => setConfig(prev => ({
+                    ...prev,
+                    timer_appearance: { ...prev.timer_appearance, show_background: false }
+                  }))}
+                >
+                  <span className="bg-toggle-icon">✨</span>
+                  <div>
+                    <div className="bg-toggle-title">โปร่งใส ไร้พื้นหลัง (Transparent)</div>
+                    <div className="bg-toggle-desc">ไม่มีกรอบกล่อง ตัวเลขลอยเด่น ไม่บังฉากเกมใน OBS</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Elements Visibility Toggles */}
+            <div className="timer-form-row" style={{ gap: '16px', marginTop: '2px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, color: '#334155' }}>
+                <input
+                  type="checkbox"
+                  checked={config.timer_appearance.show_title !== false}
+                  onChange={e => setConfig(prev => ({
+                    ...prev,
+                    timer_appearance: { ...prev.timer_appearance, show_title: e.target.checked }
+                  }))}
+                />
+                แสดงหัวข้อไตเติล
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, color: '#334155' }}>
+                <input
+                  type="checkbox"
+                  checked={config.timer_appearance.show_donor_badge !== false}
+                  onChange={e => setConfig(prev => ({
+                    ...prev,
+                    timer_appearance: { ...prev.timer_appearance, show_donor_badge: e.target.checked }
+                  }))}
+                />
+                แสดงแถบผู้บริจาคล่าสุด
+              </label>
+            </div>
+
+            {config.timer_appearance.show_background === false && (
+              <div style={{ fontSize: '12.5px', color: '#0369a1', background: '#f0f9ff', padding: '8px 12px', borderRadius: '8px', border: '1px solid #bae6fd' }}>
+                💡 <strong>โหมดโปร่งใสเปิดใช้งานอยู่:</strong> หน้าจอ Overlay จะซ่อนสีพื้นหลัง ขอบ และเงากล่อง เหลือเฉพาะตัวเลขและข้อความที่คมชัด
+              </div>
+            )}
+
             <div className="timer-form-group">
               <label>หัวข้อตัวจับเวลา (Title Text)</label>
               <input
@@ -677,16 +745,17 @@ export default function TimerAdminPage() {
             </div>
 
             <div className="timer-form-row timer-form-row-colors">
-              <div className="timer-form-group" style={{ flex: 1 }}>
-                <label>สีพื้นหลัง</label>
+              <div className="timer-form-group" style={{ flex: 1, opacity: config.timer_appearance.show_background === false ? 0.6 : 1 }}>
+                <label>สีพื้นหลัง {config.timer_appearance.show_background === false && '(ปิดอยู่)'}</label>
                 <input
                   type="color"
                   value={config.timer_appearance.bg_color}
+                  disabled={config.timer_appearance.show_background === false}
                   onChange={e => setConfig(prev => ({
                     ...prev,
                     timer_appearance: { ...prev.timer_appearance, bg_color: e.target.value }
                   }))}
-                  style={{ height: '38px', padding: '2px', cursor: 'pointer' }}
+                  style={{ height: '38px', padding: '2px', cursor: config.timer_appearance.show_background === false ? 'not-allowed' : 'pointer' }}
                 />
               </div>
               <div className="timer-form-group" style={{ flex: 1 }}>
@@ -729,12 +798,13 @@ export default function TimerAdminPage() {
                   }))}
                 />
               </div>
-              <div className="timer-form-group" style={{ flex: 1 }}>
-                <label>ความโปร่งใส ({config.timer_appearance.opacity}%)</label>
+              <div className="timer-form-group" style={{ flex: 1, opacity: config.timer_appearance.show_background === false ? 0.6 : 1 }}>
+                <label>ความโปร่งใสกล่อง {config.timer_appearance.show_background === false ? '(ปิดอยู่)' : `(${config.timer_appearance.opacity}%)`}</label>
                 <input
                   type="range"
                   min="0"
                   max="100"
+                  disabled={config.timer_appearance.show_background === false}
                   value={config.timer_appearance.opacity}
                   onChange={e => setConfig(prev => ({
                     ...prev,
@@ -742,6 +812,209 @@ export default function TimerAdminPage() {
                   }))}
                 />
               </div>
+            </div>
+
+            {/* เงาส่วนของตัวเลขนับเวลา (Digits Text Shadow) */}
+            <div className="timer-sub-section">
+              <div className="timer-sub-section-title">
+                🌑 เงาของตัวเลขนับเวลา (Digits Text Shadow)
+              </div>
+
+              {/* Toggle On/Off */}
+              <div className="stroke-toggle-grid">
+                <button
+                  type="button"
+                  className={`stroke-toggle-btn ${config.timer_appearance.show_digits_shadow === false ? 'active' : ''}`}
+                  onClick={() => setConfig(prev => ({
+                    ...prev,
+                    timer_appearance: { ...prev.timer_appearance, show_digits_shadow: false }
+                  }))}
+                >
+                  🚫 ปิดเงาตัวเลข
+                </button>
+                <button
+                  type="button"
+                  className={`stroke-toggle-btn ${config.timer_appearance.show_digits_shadow !== false ? 'active' : ''}`}
+                  onClick={() => setConfig(prev => ({
+                    ...prev,
+                    timer_appearance: {
+                      ...prev.timer_appearance,
+                      show_digits_shadow: true,
+                      digits_shadow_color: prev.timer_appearance.digits_shadow_color || '#000000',
+                      digits_shadow_blur: prev.timer_appearance.digits_shadow_blur ?? 8,
+                      digits_shadow_x: prev.timer_appearance.digits_shadow_x ?? 0,
+                      digits_shadow_y: prev.timer_appearance.digits_shadow_y ?? 2
+                    }
+                  }))}
+                >
+                  ✨ เปิดเงาตัวเลข
+                </button>
+              </div>
+
+              {config.timer_appearance.show_digits_shadow !== false && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1.5px solid #e2e8f0' }}>
+                  {/* Preset Styles */}
+                  <div className="timer-form-group">
+                    <label style={{ fontSize: '12.5px', color: '#475569' }}>พรีเซ็ตเงายอดนิยม (Quick Presets)</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
+                      <button
+                        type="button"
+                        className="preset-btn"
+                        onClick={() => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: {
+                            ...prev.timer_appearance,
+                            digits_shadow_x: 0,
+                            digits_shadow_y: 3,
+                            digits_shadow_blur: 8,
+                            digits_shadow_color: '#000000'
+                          }
+                        }))}
+                      >
+                        🌑 เงาตกกระทบ (Drop)
+                      </button>
+                      <button
+                        type="button"
+                        className="preset-btn"
+                        onClick={() => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: {
+                            ...prev.timer_appearance,
+                            digits_shadow_x: 0,
+                            digits_shadow_y: 2,
+                            digits_shadow_blur: 2,
+                            digits_shadow_color: '#000000'
+                          }
+                        }))}
+                      >
+                        ⬛ เงาคมชัด (Sharp)
+                      </button>
+                      <button
+                        type="button"
+                        className="preset-btn"
+                        onClick={() => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: {
+                            ...prev.timer_appearance,
+                            digits_shadow_x: 0,
+                            digits_shadow_y: 0,
+                            digits_shadow_blur: 16,
+                            digits_shadow_color: prev.timer_appearance.accent_color || '#38bdf8'
+                          }
+                        }))}
+                      >
+                        🌟 แสงเรือง (Neon Glow)
+                      </button>
+                      <button
+                        type="button"
+                        className="preset-btn"
+                        onClick={() => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: {
+                            ...prev.timer_appearance,
+                            digits_shadow_x: 0,
+                            digits_shadow_y: 0,
+                            digits_shadow_blur: 25,
+                            digits_shadow_color: prev.timer_appearance.accent_color || '#38bdf8'
+                          }
+                        }))}
+                      >
+                        🔮 เรืองแสงนุ่ม (Soft Glow)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Color Picker & Preset Colors */}
+                  <div className="timer-form-group">
+                    <label>กำหนดสีของเงา (Shadow Color)</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                      <input
+                        type="color"
+                        value={config.timer_appearance.digits_shadow_color?.startsWith('#') ? config.timer_appearance.digits_shadow_color : '#000000'}
+                        onChange={e => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: { ...prev.timer_appearance, digits_shadow_color: e.target.value }
+                        }))}
+                        style={{ width: '44px', height: '36px', padding: '2px', cursor: 'pointer' }}
+                      />
+                      <input
+                        type="text"
+                        value={config.timer_appearance.digits_shadow_color || '#000000'}
+                        onChange={e => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: { ...prev.timer_appearance, digits_shadow_color: e.target.value }
+                        }))}
+                        style={{ width: '110px', fontSize: '13px' }}
+                      />
+                      <div className="preset-colors-row">
+                        {[
+                          { color: '#000000', label: 'ดำ' },
+                          { color: '#ffffff', label: 'ขาว' },
+                          { color: config.timer_appearance.accent_color || '#38bdf8', label: 'สีธีม (Accent)' },
+                          { color: '#ef4444', label: 'แดง' },
+                          { color: '#eab308', label: 'ทอง' },
+                          { color: '#22c55e', label: 'เขียว' },
+                        ].map(c => (
+                          <button
+                            key={c.color + c.label}
+                            type="button"
+                            className={`preset-color-chip ${config.timer_appearance.digits_shadow_color === c.color ? 'active' : ''}`}
+                            style={{ backgroundColor: c.color }}
+                            onClick={() => setConfig(prev => ({
+                              ...prev,
+                              timer_appearance: { ...prev.timer_appearance, digits_shadow_color: c.color }
+                            }))}
+                            title={c.label}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sliders: Blur, Offset Y, Offset X */}
+                  <div className="timer-form-row">
+                    <div className="timer-form-group" style={{ flex: 1 }}>
+                      <label>ความฟุ้งเบลอ ({config.timer_appearance.digits_shadow_blur ?? 8}px)</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="30"
+                        value={config.timer_appearance.digits_shadow_blur ?? 8}
+                        onChange={e => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: { ...prev.timer_appearance, digits_shadow_blur: parseInt(e.target.value) || 0 }
+                        }))}
+                      />
+                    </div>
+                    <div className="timer-form-group" style={{ flex: 1 }}>
+                      <label>ระยะห่างแนวตั้ง Y ({config.timer_appearance.digits_shadow_y ?? 2}px)</label>
+                      <input
+                        type="range"
+                        min="-10"
+                        max="20"
+                        value={config.timer_appearance.digits_shadow_y ?? 2}
+                        onChange={e => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: { ...prev.timer_appearance, digits_shadow_y: parseInt(e.target.value) || 0 }
+                        }))}
+                      />
+                    </div>
+                    <div className="timer-form-group" style={{ flex: 1 }}>
+                      <label>ระยะห่างแนวนอน X ({config.timer_appearance.digits_shadow_x ?? 0}px)</label>
+                      <input
+                        type="range"
+                        min="-10"
+                        max="10"
+                        value={config.timer_appearance.digits_shadow_x ?? 0}
+                        onChange={e => setConfig(prev => ({
+                          ...prev,
+                          timer_appearance: { ...prev.timer_appearance, digits_shadow_x: parseInt(e.target.value) || 0 }
+                        }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -792,29 +1065,62 @@ export default function TimerAdminPage() {
               <ExternalLink size={20} style={{ color: '#0284c7' }} />
               ลิงก์สำหรับ OBS Browser Source
             </h2>
-            <div className="timer-source-box">
-              <input
-                readOnly
-                value={`${origin}/overlay/timer`}
-                onFocus={e => e.target.select()}
-              />
-              <button
-                type="button"
-                className="timer-btn timer-btn-secondary"
-                onClick={copyObsLink}
-              >
-                <Copy size={16} /> คัดลอก
-              </button>
-              <a
-                href="/overlay/timer"
-                target="_blank"
-                rel="noreferrer"
-                className="timer-btn timer-btn-primary"
-                style={{ textDecoration: 'none' }}
-              >
-                เปิด
-              </a>
+            <div className="timer-form-group">
+              <label>ลิงก์หลักตามค่าที่บันทึกไว้ ({config.timer_appearance.show_background !== false ? 'มีพื้นหลัง' : 'โปร่งใสไร้พื้นหลัง'})</label>
+              <div className="timer-source-box">
+                <input
+                  readOnly
+                  value={`${origin}/overlay/timer`}
+                  onFocus={e => e.target.select()}
+                />
+                <button
+                  type="button"
+                  className="timer-btn timer-btn-secondary"
+                  onClick={() => copyObsLink(`${origin}/overlay/timer`)}
+                >
+                  <Copy size={16} /> คัดลอก
+                </button>
+                <a
+                  href="/overlay/timer"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="timer-btn timer-btn-primary"
+                  style={{ textDecoration: 'none' }}
+                >
+                  เปิด
+                </a>
+              </div>
             </div>
+
+            <div className="timer-form-group" style={{ marginTop: '4px' }}>
+              <label style={{ fontSize: '12px', color: '#64748b' }}>
+                ✨ ลิงก์บังคับโปร่งใสไร้พื้นหลังโดยเฉพาะ (ต่อท้าย <code style={{ color: '#0284c7', background: '#f1f5f9', padding: '1px 4px', borderRadius: '4px' }}>?bg=0</code> ไม่บังหน้าจอเกม):
+              </label>
+              <div className="timer-source-box">
+                <input
+                  readOnly
+                  value={`${origin}/overlay/timer?bg=0`}
+                  onFocus={e => e.target.select()}
+                />
+                <button
+                  type="button"
+                  className="timer-btn timer-btn-secondary"
+                  onClick={() => copyObsLink(`${origin}/overlay/timer?bg=0`)}
+                >
+                  <Copy size={16} /> คัดลอก
+                </button>
+                <a
+                  href="/overlay/timer?bg=0"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="timer-btn timer-btn-secondary"
+                  style={{ textDecoration: 'none' }}
+                >
+                  เปิด
+                </a>
+              </div>
+            </div>
+
             <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
               แนะนำตั้งค่าใน OBS Browser Source: ความกว้าง <strong>520 px</strong>, ความสูง <strong>180 px</strong>
             </p>
@@ -822,11 +1128,11 @@ export default function TimerAdminPage() {
             {/* Embedded Live Preview */}
             <div style={{ marginTop: '10px' }}>
               <div style={{ fontSize: '13px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>
-                พรีวิวสด (Live Preview)
+                พรีวิวสด (Live Preview) - {config.timer_appearance.show_background !== false ? 'โหมดมีพื้นหลัง' : 'โหมดโปร่งใสไร้พื้นหลัง'}
               </div>
               <div
+                className="timer-preview-checkerboard"
                 style={{
-                  background: '#090d16',
                   borderRadius: '12px',
                   border: '1.5px solid #e2e8f0',
                   overflow: 'hidden',
@@ -837,9 +1143,9 @@ export default function TimerAdminPage() {
                 }}
               >
                 <iframe
-                  key={previewKey}
+                  key={`${previewKey}-${config.timer_appearance.show_background !== false ? 'bg' : 'nobg'}-${config.timer_appearance.show_digits_shadow !== false ? 'sh1' : 'sh0'}-${config.timer_appearance.digits_shadow_color}-${config.timer_appearance.digits_shadow_blur}-${config.timer_appearance.digits_shadow_x}-${config.timer_appearance.digits_shadow_y}`}
                   title="Timer Live Preview"
-                  src="/overlay/timer?preview=1"
+                  src={`/overlay/timer?preview=1${config.timer_appearance.show_background === false ? '&bg=0' : '&bg=1'}${config.timer_appearance.show_digits_shadow === false ? '&shadow=0' : `&shadow=1&shadow_color=${encodeURIComponent(config.timer_appearance.digits_shadow_color || '#000000')}&shadow_blur=${config.timer_appearance.digits_shadow_blur ?? 8}`}`}
                   style={{
                     width: '100%',
                     height: '100%',
