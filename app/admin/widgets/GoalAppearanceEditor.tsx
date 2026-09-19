@@ -1,24 +1,24 @@
 'use client';
 
 import React from 'react';
-import { 
-  Target, 
-  RotateCcw, 
-  Sparkles, 
-  Zap, 
-  Activity, 
-  Layers, 
-  Palette, 
-  Sliders, 
-  Type, 
-  Check, 
-  Eye 
+import {
+  Target,
+  RotateCcw,
+  Sparkles,
+  Zap,
+  Activity,
+  Layers,
+  Palette,
+  Sliders,
+  Type,
+  Check,
+  Eye
 } from 'lucide-react';
-import { 
-  GoalAppearance, 
-  goalAppearanceDefaults, 
-  goalAppearanceRanges, 
-  goalFontOptions 
+import {
+  GoalAppearance,
+  goalAppearanceDefaults,
+  goalAppearanceRanges,
+  goalFontOptions
 } from '@/lib/goalAppearance';
 import GoalWidget from '@/app/overlay/goal/GoalWidget';
 import './goal-editor-premium.css';

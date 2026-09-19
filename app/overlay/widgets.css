@@ -161,13 +161,11 @@ body.widget-overlay-body {
     inset: 0;
     pointer-events: none;
     border-radius: inherit;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.38) 0%,
-        rgba(255, 255, 255, 0.12) 40%,
-        rgba(255, 255, 255, 0.0) 50%,
-        rgba(0, 0, 0, 0.08) 100%
-    );
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.38) 0%,
+            rgba(255, 255, 255, 0.12) 40%,
+            rgba(255, 255, 255, 0.0) 50%,
+            rgba(0, 0, 0, 0.08) 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -1px 1px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
@@ -181,12 +179,10 @@ body.widget-overlay-body {
     height: 100%;
     pointer-events: none;
     border-radius: 999px;
-    background: radial-gradient(
-        ellipse at center,
-        rgba(255, 255, 255, 0.95) 0%,
-        rgba(255, 255, 255, 0.5) 45%,
-        transparent 80%
-    );
+    background: radial-gradient(ellipse at center,
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(255, 255, 255, 0.5) 45%,
+            transparent 80%);
     box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.75), 0 0 20px 4px rgba(255, 255, 255, 0.35);
     z-index: 3;
     animation: goal-lead-breathe 2.4s ease-in-out infinite alternate;
@@ -198,6 +194,7 @@ body.widget-overlay-body {
         transform: scaleY(0.92);
         filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
     }
+
     100% {
         opacity: 1;
         transform: scaleY(1);
@@ -223,16 +220,14 @@ body.widget-overlay-body {
     width: clamp(36px, 12%, 68px);
     height: 220%;
     pointer-events: none;
-    background: linear-gradient(
-        115deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.03) 25%,
-        rgba(255, 255, 255, 0.2) 42%,
-        rgba(255, 255, 255, 0.85) 50%,
-        rgba(255, 255, 255, 0.2) 58%,
-        rgba(255, 255, 255, 0.03) 75%,
-        transparent 100%
-    );
+    background: linear-gradient(115deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.03) 25%,
+            rgba(255, 255, 255, 0.2) 42%,
+            rgba(255, 255, 255, 0.85) 50%,
+            rgba(255, 255, 255, 0.2) 58%,
+            rgba(255, 255, 255, 0.03) 75%,
+            transparent 100%);
     transform: rotate(25deg);
     box-shadow: 0 0 24px 6px rgba(255, 255, 255, 0.55), 0 0 45px 12px rgba(255, 255, 255, 0.25);
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
@@ -250,14 +245,12 @@ body.widget-overlay-body {
     margin-left: 14px;
     pointer-events: none;
     border-radius: 50%;
-    background: radial-gradient(
-        circle,
-        #ffffff 15%,
-        rgba(255, 255, 255, 0.8) 45%,
-        rgba(255, 255, 255, 0.15) 70%,
-        transparent 85%
-    );
-    box-shadow: 
+    background: radial-gradient(circle,
+            #ffffff 15%,
+            rgba(255, 255, 255, 0.8) 45%,
+            rgba(255, 255, 255, 0.15) 70%,
+            transparent 85%);
+    box-shadow:
         0 0 10px 2px rgba(255, 255, 255, 0.9),
         0 0 22px 5px rgba(255, 255, 255, 0.5),
         0 0 35px 8px rgba(103, 232, 249, 0.4);
@@ -283,17 +276,21 @@ body.widget-overlay-body {
         left: -40%;
         opacity: 0;
     }
+
     8% {
         opacity: 1;
     }
+
     48% {
         left: 115%;
         opacity: 1;
     }
+
     49% {
         opacity: 0;
         left: 115%;
     }
+
     100% {
         opacity: 0;
         left: -40%;
@@ -306,22 +303,27 @@ body.widget-overlay-body {
         transform: translateY(-50%) scale(0.3);
         opacity: 0;
     }
+
     10% {
         opacity: 0.9;
         transform: translateY(-50%) scale(0.9);
     }
+
     28% {
         opacity: 1;
         transform: translateY(-50%) scale(1.15);
     }
+
     48% {
         left: 115%;
         opacity: 0.8;
         transform: translateY(-50%) scale(0.7);
     }
+
     49% {
         opacity: 0;
     }
+
     100% {
         opacity: 0;
         left: -40%;
